@@ -1,0 +1,242 @@
+{
+  "name": "AXON — Sentinel (Monitoring Agent)",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## ⚫ SENTINEL — Monitoring & Alert Agent\n\nWatches your competitors, monitors your APIs for downtime, tracks keyword mentions, and sends instant alerts when something important happens.\n\n**Runs:** Every hour automatically",
+        "height": 140, "width": 700, "color": 2
+      },
+      "id": "sticky-sentinel-header",
+      "name": "Sentinel Header",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-100, -280]
+    },
+    {
+      "parameters": {
+        "content": "## 🔍 STEP 1 — MONITOR\nChecks APIs, competitor sites, keyword alerts",
+        "height": 100, "width": 380, "color": 2
+      },
+      "id": "sticky-sen1",
+      "name": "Sen-Step1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-100, -120]
+    },
+    {
+      "parameters": {
+        "content": "## 🤖 STEP 2 — ANALYSE CHANGES\nClaude analyses what changed and whether it matters",
+        "height": 100, "width": 380, "color": 2
+      },
+      "id": "sticky-sen2",
+      "name": "Sen-Step2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [580, -120]
+    },
+    {
+      "parameters": {
+        "content": "## 🚨 STEP 3 — ALERT\nSends email alert only if something important changed",
+        "height": 100, "width": 380, "color": 2
+      },
+      "id": "sticky-sen3",
+      "name": "Sen-Step3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1200, -120]
+    },
+    {
+      "parameters": {
+        "rule": {"interval": [{"field": "hours","hoursInterval": 1}]}
+      },
+      "id": "sentinel-schedule",
+      "name": "⏰ Every Hour",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [-40, 0]
+    },
+    {
+      "parameters": {
+        "workflowInputs": {"values": [{"name": "payload"},{"name": "userId"},{"name": "requestId"}]}
+      },
+      "id": "sentinel-trigger",
+      "name": "📥 Sentinel: Called by Master",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [-40, 120]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.anthropic.com/v1/models",
+        "sendHeaders": true,
+        "headerParameters": {"parameters": [{"name": "x-api-key","value": "={{ $credentials.anthropicApiKey }}"},{"name": "anthropic-version","value": "2023-06-01"}]},
+        "options": {"timeout": 5000}
+      },
+      "id": "check-anthropic",
+      "name": "🔍 Check Anthropic API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, -60],
+      "continueOnFail": true,
+      "credentials": {"anthropicApi": {"id": "anthropic-cred","name": "Anthropic API"}}
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.apollo.io/api/v1/auth/health",
+        "options": {"timeout": 5000}
+      },
+      "id": "check-apollo",
+      "name": "🔍 Check Apollo API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 60],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.hunter.io/v2/account",
+        "sendQuery": true,
+        "queryParameters": {"parameters": [{"name": "api_key","value": "={{ $credentials.hunterApiKey }}"}]},
+        "options": {"timeout": 5000}
+      },
+      "id": "check-hunter",
+      "name": "🔍 Check Hunter API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 180],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const anthropic = $('🔍 Check Anthropic API').first();\nconst apollo = $('🔍 Check Apollo API').first();\nconst hunter = $('🔍 Check Hunter API').first();\n\nconst apiStatus = {\n  anthropic: !anthropic.json.error ? 'OK' : 'DOWN',\n  apollo: !apollo.json.error ? 'OK' : 'DOWN',\n  hunter: !hunter.json.error ? 'OK' : 'DOWN'\n};\n\nconst downApis = Object.entries(apiStatus).filter(([k,v]) => v === 'DOWN').map(([k]) => k);\nconst hasIssues = downApis.length > 0;\n\nreturn [{\n  json: {\n    apiStatus,\n    downApis,\n    hasIssues,\n    checkedAt: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "compile-health",
+      "name": "📊 Compile Health Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 60]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://news.ycombinator.com/rss",
+        "options": {}
+      },
+      "id": "monitor-hn",
+      "name": "📰 Monitor HN for Competitor News",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [480, 180],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "model": "claude-sonnet-4-20250514",
+        "options": {}
+      },
+      "id": "sentinel-claude",
+      "name": "🤖 Claude for Analysis",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [820, 300],
+      "credentials": {"anthropicApi": {"id": "anthropic-cred","name": "Anthropic API"}}
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are monitoring an AI B2B SaaS business. Analyze this system health report and determine if an alert should be sent.\n\nAPI Status: {{ JSON.stringify($json.apiStatus) }}\nDown APIs: {{ $json.downApis.join(', ') || 'None' }}\nHas Issues: {{ $json.hasIssues }}\n\nRespond ONLY with JSON:\n{\"shouldAlert\": true/false, \"severity\": \"critical/warning/info\", \"message\": \"One line summary of what happened and what impact it has\", \"action\": \"What should be done\"}",
+        "hasOutputParser": true
+      },
+      "id": "analyse-health",
+      "name": "🧠 Claude: Analyse Health",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [700, 120]
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\"shouldAlert\": true, \"severity\": \"critical\", \"message\": \"Apollo API is down\", \"action\": \"Check Apollo status page\"}"
+      },
+      "id": "alert-parser",
+      "name": "📊 Parse Alert Decision",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [820, 120]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {"combinator": "and"},
+          "conditions": [{"leftValue": "={{ JSON.parse($json.output).shouldAlert }}","operator": {"type": "boolean","operation": "true"}}]
+        }
+      },
+      "id": "should-alert",
+      "name": "❓ Should Send Alert?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1040, 120]
+    },
+    {
+      "parameters": {
+        "sendTo": "your-email@domain.com",
+        "subject": "=🚨 AXON Sentinel Alert: {{ JSON.parse($('🧠 Claude: Analyse Health').first().json.output).severity.toUpperCase() }}",
+        "message": "=AXON Sentinel has detected an issue:\n\n⚠️ {{ JSON.parse($('🧠 Claude: Analyse Health').first().json.output).message }}\n\n🔧 Recommended Action:\n{{ JSON.parse($('🧠 Claude: Analyse Health').first().json.output).action }}\n\n📊 Full API Status:\nAnthropic: {{ $('📊 Compile Health Report').first().json.apiStatus.anthropic }}\nApollo: {{ $('📊 Compile Health Report').first().json.apiStatus.apollo }}\nHunter: {{ $('📊 Compile Health Report').first().json.apiStatus.hunter }}\n\nDetected at: {{ new Date().toISOString() }}",
+        "options": {}
+      },
+      "id": "send-alert",
+      "name": "🚨 Send Alert Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [1260, 60],
+      "credentials": {"gmailOAuth2": {"id": "gmail-cred","name": "Gmail OAuth"}}
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {"__rl": true,"mode": "list","value": "public"},
+        "table": {"__rl": true,"mode": "list","value": "sentinel_logs"},
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "api_status": "={{ JSON.stringify($('📊 Compile Health Report').first().json.apiStatus) }}",
+            "has_issues": "={{ $('📊 Compile Health Report').first().json.hasIssues }}",
+            "alert_sent": "={{ JSON.parse($('🧠 Claude: Analyse Health').first().json.output).shouldAlert }}",
+            "severity": "={{ JSON.parse($('🧠 Claude: Analyse Health').first().json.output).severity }}",
+            "message": "={{ JSON.parse($('🧠 Claude: Analyse Health').first().json.output).message }}",
+            "checked_at": "={{ new Date().toISOString() }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "log-sentinel",
+      "name": "💾 Log to Sentinel Logs",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1260, 200],
+      "credentials": {"postgres": {"id": "supabase-cred","name": "Supabase DB"}}
+    }
+  ],
+  "connections": {
+    "⏰ Every Hour": {"main": [[{"node": "🔍 Check Anthropic API","type": "main","index": 0}]]},
+    "📥 Sentinel: Called by Master": {"main": [[{"node": "🔍 Check Anthropic API","type": "main","index": 0}]]},
+    "🔍 Check Anthropic API": {"main": [[{"node": "📊 Compile Health Report","type": "main","index": 0}]]},
+    "🔍 Check Apollo API": {"main": [[{"node": "📊 Compile Health Report","type": "main","index": 0}]]},
+    "🔍 Check Hunter API": {"main": [[{"node": "📊 Compile Health Report","type": "main","index": 0}]]},
+    "📊 Compile Health Report": {"main": [[{"node": "🧠 Claude: Analyse Health","type": "main","index": 0}]]},
+    "🧠 Claude: Analyse Health": {"main": [[{"node": "❓ Should Send Alert?","type": "main","index": 0}]]},
+    "🤖 Claude for Analysis": {"ai_languageModel": [[{"node": "🧠 Claude: Analyse Health","type": "ai_languageModel","index": 0}]]},
+    "📊 Parse Alert Decision": {"ai_outputParser": [[{"node": "🧠 Claude: Analyse Health","type": "ai_outputParser","index": 0}]]},
+    "❓ Should Send Alert?": {
+      "main": [
+        [{"node": "🚨 Send Alert Email","type": "main","index": 0}],
+        [{"node": "💾 Log to Sentinel Logs","type": "main","index": 0}]
+      ]
+    },
+    "🚨 Send Alert Email": {"main": [[{"node": "💾 Log to Sentinel Logs","type": "main","index": 0}]]}
+  },
+  "settings": {"executionOrder": "v1"},
+  "tags": [{"name": "AXON"},{"name": "Sentinel"}]
+}

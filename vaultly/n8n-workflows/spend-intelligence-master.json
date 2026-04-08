@@ -1,0 +1,141 @@
+{
+  "name": "Vaultly: Master SaaS Spend & Intelligence Engine",
+  "nodes": [
+    {
+      "parameters": {
+        "filters": {
+          "q": "subject:invoice OR subject:receipt OR subject:billing"
+        },
+        "options": {}
+      },
+      "id": "1",
+      "name": "Gmail Monitor",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
+      "position": [200, 300],
+      "credentials": {
+        "gmailApi": {
+          "id": "gmail-vaultly-key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "claude-3-5-sonnet-20240620",
+        "prompt": "Extract the following from this document: {{$json.text}}. Fields: tool_name, total_amount, annual_or_monthly, seat_count, renewal_date. JSON Format.",
+        "options": {}
+      },
+      "id": "2",
+      "name": "AI Invoice OCR (Claude)",
+      "type": "n8n-nodes-base.anthropic",
+      "typeVersion": 1,
+      "position": [400, 300],
+      "credentials": {
+        "anthropicApi": {
+          "id": "anthropic-vaultly-key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://api.vaultly.cloud/v1/benchmarks",
+        "method": "POST",
+        "bodyParameters": {
+          "tool": "={{$json.tool_name}}",
+          "seats": "={{$json.seat_count}}",
+          "current_price": "={{$json.total_amount}}"
+        },
+        "options": {}
+      },
+      "id": "3",
+      "name": "Market Benchmark Check",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [600, 300]
+    },
+    {
+      "parameters": {
+        "table": "saas_inventory",
+        "data": {
+          "user_id": "={{$json.user_id}}",
+          "tool": "={{$json.tool_name}}",
+          "spend": "={{$json.total_amount}}",
+          "potential_savings": "={{$json.potential_savings}}",
+          "last_update": "={{$now}}"
+        }
+      },
+      "id": "4",
+      "name": "Update CFO Dashboard",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [800, 300],
+      "credentials": {
+        "supabaseApi": {
+          "id": "supabase-vaultly-key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "📊 VAULTLY INSIGHT: New invoice identified for {{$json.tool_name}}. Estimated potential savings: {{$json.potential_savings}} USD/year.",
+        "options": {}
+      },
+      "id": "5",
+      "name": "Slack CFO Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [1000, 300],
+      "credentials": {
+        "slackApi": {
+          "id": "slack-vaultly-key"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Gmail Monitor": {
+      "main": [
+        [
+          {
+            "node": "AI Invoice OCR (Claude)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Invoice OCR (Claude)": {
+      "main": [
+        [
+          {
+            "node": "Market Benchmark Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Market Benchmark Check": {
+      "main": [
+        [
+          {
+            "node": "Update CFO Dashboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update CFO Dashboard": {
+      "main": [
+        [
+          {
+            "node": "Slack CFO Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

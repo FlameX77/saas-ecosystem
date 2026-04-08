@@ -1,0 +1,140 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Client {
+  id             String   @id @default(uuid())
+  name           String
+  businessType   String
+  avgDealValue   Float    @default(1000)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  users      ClientUser[]
+  leads      Lead[]
+  workflows  Workflow[]
+  jobs       Job[]
+  messages   Message[]
+  events     Event[]
+}
+
+model ClientUser {
+  id        String   @id @default(uuid())
+  clientId  String
+  email     String   @unique
+  password  String
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  client Client @relation(fields: [clientId], references: [id])
+
+  @@index([clientId])
+  @@index([email])
+}
+
+model Lead {
+  id        String   @id @default(uuid())
+  clientId  String
+  name      String
+  email     String?
+  phone     String?
+  metadata  String   @default("{}")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  client   Client    @relation(fields: [clientId], references: [id])
+  events   Event[]
+  jobs     Job[]
+  messages Message[]
+
+  @@index([clientId])
+}
+
+model Event {
+  id        String   @id @default(uuid())
+  clientId  String
+  leadId    String
+  type      String
+  payload   String   @default("{}")
+  createdAt DateTime @default(now())
+
+  client Client @relation(fields: [clientId], references: [id])
+  lead   Lead   @relation(fields: [leadId], references: [id])
+  jobs   Job[]
+
+  @@index([clientId])
+  @@index([leadId])
+  @@index([type])
+}
+
+model Workflow {
+  id          String   @id @default(uuid())
+  clientId    String
+  name        String
+  triggerType String
+  steps       String   @default("[]")
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  client Client @relation(fields: [clientId], references: [id])
+  jobs   Job[]
+
+  @@index([clientId])
+  @@index([triggerType])
+}
+
+model Job {
+  id             String    @id @default(uuid())
+  clientId       String
+  leadId         String
+  eventId        String
+  workflowId     String
+  stepIndex      Int       @default(0)
+  status         String    @default("pending")
+  attempts       Int       @default(0)
+  maxAttempts    Int       @default(3)
+  lastError      String?
+  lockedAt       DateTime?
+  lockId         String?
+  idempotencyKey String    @unique
+  runAt          DateTime  @default(now())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  client   Client   @relation(fields: [clientId], references: [id])
+  lead     Lead     @relation(fields: [leadId], references: [id])
+  event    Event    @relation(fields: [eventId], references: [id])
+  workflow Workflow @relation(fields: [workflowId], references: [id])
+
+  @@index([clientId])
+  @@index([status])
+  @@index([runAt])
+  @@index([idempotencyKey])
+  @@index([lockId])
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  clientId  String
+  leadId    String
+  channel   String
+  content   String
+  status    String   @default("sent")
+  metadata  String   @default("{}")
+  createdAt DateTime @default(now())
+
+  client Client @relation(fields: [clientId], references: [id])
+  lead   Lead   @relation(fields: [leadId], references: [id])
+
+  @@index([clientId])
+  @@index([leadId])
+  @@index([createdAt])
+  @@index([channel])
+}

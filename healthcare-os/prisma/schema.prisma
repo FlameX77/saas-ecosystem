@@ -1,0 +1,349 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== AUTH & TENANCY ====================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String
+  firstName     String
+  lastName      String
+  role          UserRole  @default(DOCTOR)
+  phone         String?
+  avatarUrl     String?
+  isActive      Boolean   @default(true)
+  lastLoginAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  clinicMemberships ClinicMember[]
+  consultations     Consultation[]  @relation("ConsultationDoctor")
+  auditLogs         AuditLog[]
+  notes             Note[]          @relation("NoteAuthor")
+  sessions          Session[]
+  accounts          Account[]
+
+  @@index([email])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  CLINIC_ADMIN
+  DOCTOR
+  NURSE
+  RECEPTIONIST
+}
+
+model Clinic {
+  id              String   @id @default(cuid())
+  name            String
+  slug            String   @unique
+  logoUrl         String?
+  address         String?
+  phone           String?
+  email           String?
+  timezone        String   @default("Asia/Dubai")
+  defaultLanguage String   @default("EN")
+  settings        Json     @default("{}")
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  members       ClinicMember[]
+  patients      Patient[]
+  consultations Consultation[]
+  templates     Template[]
+  auditLogs     AuditLog[]
+
+  @@index([slug])
+}
+
+model ClinicMember {
+  id        String   @id @default(cuid())
+  clinicId  String
+  userId    String
+  role      UserRole @default(DOCTOR)
+  joinedAt  DateTime @default(now())
+
+  clinic Clinic @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([clinicId, userId])
+  @@index([userId])
+}
+
+// ==================== PATIENTS ====================
+
+model Patient {
+  id                String    @id @default(cuid())
+  clinicId          String
+  firstName         String
+  lastName          String
+  email             String?
+  phone             String
+  dateOfBirth       DateTime
+  gender            Gender
+  bloodGroup        String?
+  allergies         String[]  @default([])
+  chronicConditions String[]  @default([])
+  medications       String[]  @default([])
+  emergencyContact  String?
+  emergencyPhone    String?
+  address           String?
+  nationalId        String?
+  insuranceProvider String?
+  insuranceNumber   String?
+  notes             String?
+  isActive          Boolean   @default(true)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  clinic        Clinic          @relation(fields: [clinicId], references: [id])
+  consultations Consultation[]
+
+  @@index([clinicId])
+  @@index([phone])
+  @@index([firstName, lastName])
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+// ==================== CONSULTATIONS ====================
+
+model Consultation {
+  id              String            @id @default(cuid())
+  clinicId        String
+  doctorId        String
+  patientId       String
+  status          ConsultationStatus @default(IN_PROGRESS)
+  language        String            @default("EN")
+  chiefComplaint  String?
+  duration        Int?              // seconds
+  audioUrl        String?
+  audioDuration   Int?              // seconds
+  transcript      String?
+  transcriptSegments Json?          // TranscriptionSegment[]
+  startedAt       DateTime          @default(now())
+  completedAt     DateTime?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  clinic      Clinic    @relation(fields: [clinicId], references: [id])
+  doctor      User      @relation("ConsultationDoctor", fields: [doctorId], references: [id])
+  patient     Patient   @relation(fields: [patientId], references: [id])
+  note        Note?
+  prescriptions Prescription[]
+  redFlags    RedFlag[]
+
+  @@index([clinicId])
+  @@index([doctorId])
+  @@index([patientId])
+  @@index([status])
+  @@index([startedAt])
+}
+
+enum ConsultationStatus {
+  IN_PROGRESS
+  TRANSCRIBING
+  NOTE_GENERATING
+  NOTE_REVIEW
+  COMPLETED
+  ARCHIVED
+}
+
+// ==================== NOTES ====================
+
+model Note {
+  id              String    @id @default(cuid())
+  consultationId  String    @unique
+  authorId        String
+  templateId      String?
+  subjective      String    @db.Text
+  objective       String    @db.Text
+  assessment      String    @db.Text
+  plan            String    @db.Text
+  icdCodes        String[]  @default([])
+  status          NoteStatus @default(DRAFT)
+  approvedById    String?
+  approvedAt      DateTime?
+  signedAt        DateTime?
+  pdfUrl          String?
+  generationTime  Int?      // ms
+  model           String?   // which AI model generated it
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  consultation Consultation @relation(fields: [consultationId], references: [id])
+  author       User         @relation("NoteAuthor", fields: [authorId], references: [id])
+  template     Template?    @relation(fields: [templateId], references: [id])
+
+  @@index([authorId])
+  @@index([status])
+}
+
+enum NoteStatus {
+  DRAFT
+  REVIEW
+  APPROVED
+  SIGNED
+}
+
+// ==================== PRESCRIPTIONS ====================
+
+model Prescription {
+  id              String  @id @default(cuid())
+  consultationId  String
+  medication      String
+  dosage          String
+  frequency       String
+  duration        String
+  instructions    String?
+  isRefill        Boolean @default(false)
+  createdAt       DateTime @default(now())
+
+  consultation Consultation @relation(fields: [consultationId], references: [id])
+
+  @@index([consultationId])
+}
+
+// ==================== RED FLAGS ====================
+
+model RedFlag {
+  id              String   @id @default(cuid())
+  consultationId  String
+  symptom         String
+  severity        Severity @default(MEDIUM)
+  recommendation  String
+  acknowledged    Boolean  @default(false)
+  acknowledgedBy  String?
+  createdAt       DateTime @default(now())
+
+  consultation Consultation @relation(fields: [consultationId], references: [id])
+
+  @@index([consultationId])
+}
+
+enum Severity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+// ==================== TEMPLATES ====================
+
+model Template {
+  id                String  @id @default(cuid())
+  clinicId          String
+  name              String
+  specialty         String
+  language          String  @default("EN")
+  subjectivePrompt  String  @db.Text
+  objectivePrompt   String  @db.Text
+  assessmentPrompt  String  @db.Text
+  planPrompt        String  @db.Text
+  isDefault         Boolean @default(false)
+  isActive          Boolean @default(true)
+  createdBy         String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  clinic Clinic  @relation(fields: [clinicId], references: [id])
+  notes  Note[]
+
+  @@index([clinicId])
+  @@index([specialty])
+}
+
+// ==================== AUDIT ====================
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  clinicId   String
+  userId     String
+  action     String
+  resource   String
+  resourceId String
+  metadata   Json?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  clinic Clinic @relation(fields: [clinicId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@index([clinicId])
+  @@index([userId])
+  @@index([resource, resourceId])
+  @@index([createdAt])
+  @@index([action])
+}
+
+// ==================== NOTIFICATIONS ====================
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  clinicId  String
+  type      String
+  title     String
+  body      String
+  link      String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId, read])
+  @@index([clinicId])
+}
+
+// ==================== ICD CODES ====================
+
+model IcdCode {
+  id          String @id @default(cuid())
+  code        String @unique
+  description String
+  category    String
+  chapter     String
+  isActive    Boolean @default(true)
+
+  @@index([code])
+}

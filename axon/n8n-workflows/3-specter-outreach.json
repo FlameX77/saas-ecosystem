@@ -1,0 +1,319 @@
+{
+  "name": "AXON — Specter (Outreach Agent)",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## 🟢 SPECTER — Outreach & Email Sequence Agent\n\nTakes qualified leads from Cortex, writes hyper-personalized emails using Claude, sends 3-touch sequences automatically\n\n**Runs:** Every day at 9AM + triggered by Master",
+        "height": 140, "width": 700, "color": 3
+      },
+      "id": "sticky-specter-header",
+      "name": "Specter Header",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-100, -280]
+    },
+    {
+      "parameters": {
+        "content": "## 📥 STEP 1 — FETCH QUEUED LEADS\nPulls all leads with status = queued from Supabase",
+        "height": 100, "width": 400, "color": 3
+      },
+      "id": "sticky-s1",
+      "name": "S-Step1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-100, -120]
+    },
+    {
+      "parameters": {
+        "content": "## ✍️ STEP 2 — AI EMAIL WRITING\nClaude writes personalized subject + body + 2 follow-ups",
+        "height": 100, "width": 400, "color": 3
+      },
+      "id": "sticky-s2",
+      "name": "S-Step2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [600, -120]
+    },
+    {
+      "parameters": {
+        "content": "## 📧 STEP 3 — SEND & SCHEDULE\nSends email 1 now, schedules follow-ups at day 3 and day 7",
+        "height": 100, "width": 400, "color": 3
+      },
+      "id": "sticky-s3",
+      "name": "S-Step3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1300, -120]
+    },
+    {
+      "parameters": {
+        "content": "## 💾 STEP 4 — LOG & UPDATE\nSaves messages to DB, updates lead status to emailed",
+        "height": 100, "width": 400, "color": 3
+      },
+      "id": "sticky-s4",
+      "name": "S-Step4",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [2000, -120]
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [{"name": "payload"},{"name": "userId"},{"name": "requestId"}]
+        }
+      },
+      "id": "specter-trigger",
+      "name": "📥 Specter: Called by Master",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [-40, 0]
+    },
+    {
+      "parameters": {
+        "rule": {"interval": [{"field": "cronExpression","expression": "0 9 * * 1-5"}]}
+      },
+      "id": "specter-schedule",
+      "name": "⏰ Weekdays 9AM",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [-40, 120]
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {"__rl": true,"mode": "list","value": "public"},
+        "table": {"__rl": true,"mode": "list","value": "contacts"},
+        "where": {"values": [{"column": "status","value": "queued"}]},
+        "limit": 50,
+        "options": {}
+      },
+      "id": "fetch-queued",
+      "name": "📋 Fetch Queued Leads",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [220, 60],
+      "credentials": {"postgres": {"id": "supabase-cred","name": "Supabase DB"}}
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {"combinator": "and"},
+          "conditions": [{"leftValue": "={{ $input.all().length }}","operator": {"type": "number","operation": "gt"},"rightValue": 0}]
+        }
+      },
+      "id": "check-has-leads",
+      "name": "❓ Any Leads to Process?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [440, 60]
+    },
+    {
+      "parameters": {
+        "model": "claude-sonnet-4-20250514",
+        "options": {}
+      },
+      "id": "specter-claude-model",
+      "name": "🤖 Claude for Email Writing",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [800, 200],
+      "credentials": {"anthropicApi": {"id": "anthropic-cred","name": "Anthropic API"}}
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an expert B2B cold email copywriter. Write a highly personalized 3-email outreach sequence.\n\nProspect details:\n- Name: {{ $json.first_name }} {{ $json.last_name }}\n- Title: {{ $json.title }}\n- Company: {{ $json.company }}\n- Industry: {{ $json.industry }}\n- Country: {{ $json.country }}\n- Why they scored high: {{ $json.score_reason }}\n\nRules:\n- Email 1: Ultra short (3-4 sentences max), lead with THEIR pain point, ask for 15-min call\n- Email 2 (day 3 follow-up): Share a relevant result/stat, soft follow-up\n- Email 3 (day 7 follow-up): Final, mention you won't follow up again, include value\n- Subject lines: Specific, conversational, no spam words, no exclamation marks\n- NEVER mention AI wrote this\n- Write as if from a real human founder\n\nRespond ONLY with valid JSON:\n{\"subject1\": \"\", \"email1\": \"\", \"subject2\": \"\", \"email2\": \"\", \"subject3\": \"\", \"email3\": \"\"}",
+        "hasOutputParser": true
+      },
+      "id": "write-emails",
+      "name": "✍️ Claude: Write Email Sequence",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [660, 60]
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\"subject1\": \"Quick question about lead gen\", \"email1\": \"Hi John...\", \"subject2\": \"Following up\", \"email2\": \"Hey John...\", \"subject3\": \"Last one from me\", \"email3\": \"John...\"}"
+      },
+      "id": "email-parser",
+      "name": "📝 Parse Email JSON",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [800, 60]
+    },
+    {
+      "parameters": {
+        "jsCode": "const emails = JSON.parse($input.first().json.output || '{}');\nconst contact = $('📋 Fetch Queued Leads').first().json;\nconst delay = Math.floor(Math.random() * 90000) + 30000;\nawait new Promise(r => setTimeout(r, delay));\nreturn [{\n  json: {\n    contactId: contact.id,\n    email: contact.email,\n    firstName: contact.first_name,\n    subject1: emails.subject1,\n    email1: emails.email1,\n    subject2: emails.subject2,\n    email2: emails.email2,\n    subject3: emails.subject3,\n    email3: emails.email3,\n    followUp1Date: new Date(Date.now() + 3*24*60*60*1000).toISOString(),\n    followUp2Date: new Date(Date.now() + 7*24*60*60*1000).toISOString()\n  }\n}];"
+      },
+      "id": "prepare-send",
+      "name": "⏳ Prepare + Human Delay",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1000, 60]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "={{ $json.subject1 }}",
+        "message": "={{ $json.email1 }}",
+        "options": {
+          "appendAttribution": false,
+          "replyTo": "your-email@domain.com"
+        }
+      },
+      "id": "send-email1",
+      "name": "📧 Send Email 1",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [1220, 60],
+      "credentials": {"gmailOAuth2": {"id": "gmail-cred","name": "Gmail OAuth"}}
+    },
+    {
+      "parameters": {
+        "amount": 3,
+        "unit": "days"
+      },
+      "id": "wait-3days",
+      "name": "⏳ Wait 3 Days",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1440, 60]
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {"__rl": true,"mode": "list","value": "public"},
+        "table": {"__rl": true,"mode": "list","value": "contacts"},
+        "where": {"values": [{"column": "id","value": "={{ $json.contactId }"},{"column": "status","value": "replied"}]},
+        "limit": 1,
+        "options": {}
+      },
+      "id": "check-replied-1",
+      "name": "🔍 Already Replied?",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1660, 60],
+      "credentials": {"postgres": {"id": "supabase-cred","name": "Supabase DB"}}
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {"combinator": "and"},
+          "conditions": [{"leftValue": "={{ $input.all().length }}","operator": {"type": "number","operation": "equals"},"rightValue": 0}]
+        }
+      },
+      "id": "no-reply-check1",
+      "name": "❓ No Reply Yet?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1880, 60]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Prepare + Human Delay').first().json.email }}",
+        "subject": "={{ $('Prepare + Human Delay').first().json.subject2 }}",
+        "message": "={{ $('Prepare + Human Delay').first().json.email2 }}",
+        "options": {"appendAttribution": false}
+      },
+      "id": "send-followup1",
+      "name": "📧 Send Follow-up 1",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [2100, 0],
+      "credentials": {"gmailOAuth2": {"id": "gmail-cred","name": "Gmail OAuth"}}
+    },
+    {
+      "parameters": {
+        "amount": 4,
+        "unit": "days"
+      },
+      "id": "wait-4days",
+      "name": "⏳ Wait 4 More Days",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [2320, 0]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Prepare + Human Delay').first().json.email }}",
+        "subject": "={{ $('Prepare + Human Delay').first().json.subject3 }}",
+        "message": "={{ $('Prepare + Human Delay').first().json.email3 }}",
+        "options": {"appendAttribution": false}
+      },
+      "id": "send-followup2",
+      "name": "📧 Send Follow-up 2 (Final)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [2540, 0],
+      "credentials": {"gmailOAuth2": {"id": "gmail-cred","name": "Gmail OAuth"}}
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {"__rl": true,"mode": "list","value": "public"},
+        "table": {"__rl": true,"mode": "list","value": "messages"},
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "contact_id": "={{ $('Prepare + Human Delay').first().json.contactId }}",
+            "subject": "={{ $('Prepare + Human Delay').first().json.subject1 }}",
+            "body": "={{ $('Prepare + Human Delay').first().json.email1 }}",
+            "followup_1": "={{ $('Prepare + Human Delay').first().json.email2 }}",
+            "followup_2": "={{ $('Prepare + Human Delay').first().json.email3 }}",
+            "status": "sent",
+            "sent_at": "={{ new Date().toISOString() }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "log-message",
+      "name": "💾 Log Message to DB",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [2760, 0],
+      "credentials": {"postgres": {"id": "supabase-cred","name": "Supabase DB"}}
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {"__rl": true,"mode": "list","value": "public"},
+        "table": {"__rl": true,"mode": "list","value": "contacts"},
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "emailed",
+            "updated_at": "={{ new Date().toISOString() }}"
+          }
+        },
+        "where": {"values": [{"column": "id","value": "={{ $('Prepare + Human Delay').first().json.contactId }}"}]},
+        "options": {}
+      },
+      "id": "update-status",
+      "name": "🔄 Update Status: Emailed",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [2980, 0],
+      "credentials": {"postgres": {"id": "supabase-cred","name": "Supabase DB"}}
+    }
+  ],
+  "connections": {
+    "📥 Specter: Called by Master": {"main": [[{"node": "📋 Fetch Queued Leads","type": "main","index": 0}]]},
+    "⏰ Weekdays 9AM": {"main": [[{"node": "📋 Fetch Queued Leads","type": "main","index": 0}]]},
+    "📋 Fetch Queued Leads": {"main": [[{"node": "❓ Any Leads to Process?","type": "main","index": 0}]]},
+    "❓ Any Leads to Process?": {"main": [[{"node": "✍️ Claude: Write Email Sequence","type": "main","index": 0}],[]]},
+    "✍️ Claude: Write Email Sequence": {"main": [[{"node": "⏳ Prepare + Human Delay","type": "main","index": 0}]]},
+    "🤖 Claude for Email Writing": {"ai_languageModel": [[{"node": "✍️ Claude: Write Email Sequence","type": "ai_languageModel","index": 0}]]},
+    "📝 Parse Email JSON": {"ai_outputParser": [[{"node": "✍️ Claude: Write Email Sequence","type": "ai_outputParser","index": 0}]]},
+    "⏳ Prepare + Human Delay": {"main": [[{"node": "📧 Send Email 1","type": "main","index": 0}]]},
+    "📧 Send Email 1": {"main": [[{"node": "⏳ Wait 3 Days","type": "main","index": 0}]]},
+    "⏳ Wait 3 Days": {"main": [[{"node": "🔍 Already Replied?","type": "main","index": 0}]]},
+    "🔍 Already Replied?": {"main": [[{"node": "❓ No Reply Yet?","type": "main","index": 0}]]},
+    "❓ No Reply Yet?": {"main": [[{"node": "📧 Send Follow-up 1","type": "main","index": 0}],[]]},
+    "📧 Send Follow-up 1": {"main": [[{"node": "⏳ Wait 4 More Days","type": "main","index": 0}]]},
+    "⏳ Wait 4 More Days": {"main": [[{"node": "📧 Send Follow-up 2 (Final)","type": "main","index": 0}]]},
+    "📧 Send Follow-up 2 (Final)": {"main": [[{"node": "💾 Log Message to DB","type": "main","index": 0}]]},
+    "💾 Log Message to DB": {"main": [[{"node": "🔄 Update Status: Emailed","type": "main","index": 0}]]}
+  },
+  "settings": {"executionOrder": "v1"},
+  "tags": [{"name": "AXON"},{"name": "Specter"}]
+}

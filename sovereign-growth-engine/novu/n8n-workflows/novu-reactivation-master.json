@@ -1,0 +1,141 @@
+{
+  "name": "NOVU — Patient Reactivation Master (WhatsApp + Voice Caller)",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## 🟢 NOVU — Patient Reactivation Master\n\n1. Ingests hospital patient lists\n2. Filters for 'Not Called' or 'Unattended'\n3. Triggers personalized WhatsApp outreach\n4. Escalates to AI Voice Caller if no response\n\n**Mechanism:** Automated Appointment Recovery & CRM Reactivation",
+        "height": 160, "width": 800, "color": 4
+      },
+      "id": "sticky-header",
+      "name": "Novu Header",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-100, -300]
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [{"name": "patient_data"}]
+        }
+      },
+      "id": "webhook-trigger",
+      "name": "📥 Ingest Hospital Data",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {"temperature": 0.7}
+      },
+      "id": "openai-personalization",
+      "name": "🤖 AI: Drafting Sequence",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [220, 200],
+      "credentials": {"openAiApi": {"id": "openai-cred","name": "OpenAI API"}}
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a senior patient care assistant at {{ $json.clinic_name }}.\n\nReactivation Script Requirements:\n- Patient: {{ $json.patient_name }}\n- Last Visit: {{ $json.last_visit_date }}\n- Reason: {{ $json.last_visit_reason }}\n- Script Goal: Book a follow-up for {{ $json.recommended_followup }}.\n\nOutput only the WhatsApp message body. Empathy first. Be clinical but warm.",
+        "hasOutputParser": true
+      },
+      "id": "draft-whatsapp",
+      "name": "✍️ AI: WhatsApp Drafter",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [220, 0]
+    },
+    {
+      "parameters": {
+        "phoneNumberId": "={{ $json.whatsapp_number_id }}",
+        "recipientPhoneNumber": "={{ $json.phone }}",
+        "messageType": "template",
+        "templateName": "patient_reactivation_v1",
+        "languageCode": "en",
+        "components": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "body": "={{ $json.output }}"
+          }
+        }
+      },
+      "id": "send-whatsapp",
+      "name": "📲 Send WhatsApp",
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [440, 0],
+      "credentials": {"whatsAppApi": {"id": "whatsapp-cred","name": "WhatsApp Business"}}
+    },
+    {
+      "parameters": {
+        "amount": 24,
+        "unit": "hours"
+      },
+      "id": "wait-24h",
+      "name": "⏳ Wait 24 Hours",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [660, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.vapi.ai/assistant/voice-call",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {"name": "Authorization","value": "Bearer vapi-key-placeholder"}
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {"name": "phoneNumber","value": "={{ $json.phone }}"},
+            {"name": "assistantId","value": "novu-clinical-reactivator"},
+            {"name": "variables","value": "={{ JSON.stringify($json) }}"}
+          ]
+        }
+      },
+      "id": "trigger-voice-caller",
+      "name": "📞 Trigger AI Voice Caller",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [880, 0]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {"__rl": true,"mode": "list","value": "public"},
+        "table": {"__rl": true,"mode": "list","value": "reactivation_logs"},
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "patient_name": "={{ $json.patient_name }}",
+            "contact_method": "escalated_to_voice",
+            "status": "pending_booking",
+            "last_contact_at": "={{ new Date().toISOString() }}"
+          }
+        }
+      },
+      "id": "log-reactivation",
+      "name": "💾 Log Result",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1100, 0],
+      "credentials": {"postgres": {"id": "supabase-cred","name": "Supabase DB"}}
+    }
+  ],
+  "connections": {
+    "📥 Ingest Hospital Data": {"main": [[{"node": "✍️ AI: WhatsApp Drafter","type": "main","index": 0}]]},
+    "🤖 AI: Drafting Sequence": {"ai_languageModel": [[{"node": "✍️ AI: WhatsApp Drafter","type": "ai_languageModel","index": 0}]]},
+    "✍️ AI: WhatsApp Drafter": {"main": [[{"node": "📲 Send WhatsApp","type": "main","index": 0}]]},
+    "📲 Send WhatsApp": {"main": [[{"node": "⏳ Wait 24 Hours","type": "main","index": 0}]]},
+    "⏳ Wait 24 Hours": {"main": [[{"node": "📞 Trigger AI Voice Caller","type": "main","index": 0}]]},
+    "📞 Trigger AI Voice Caller": {"main": [[{"node": "💾 Log Result","type": "main","index": 0}]]}
+  },
+  "settings": {"executionOrder": "v1"},
+  "tags": [{"name": "NOVU"},{"name": "Reactivation"}]
+}

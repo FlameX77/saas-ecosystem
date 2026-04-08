@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222 47% 7%; /* #0A0F1C */
+    --foreground: 0 0% 100%;
+    --card: 224 28% 15%; /* #1A1F2E */
+    --card-foreground: 0 0% 100%;
+    --popover: 224 28% 15%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 168 100% 41.6%; /* #00D4AA */
+    --primary-foreground: 222 47% 7%;
+    --secondary: 38 92% 50%; /* #F59E0B */
+    --secondary-foreground: 222 47% 7%;
+    --muted: 224 21% 22%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 168 100% 41.6%;
+    --accent-foreground: 222 47% 7%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 224 21% 22%;
+    --input: 224 21% 22%;
+    --ring: 168 100% 41.6%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-editorial-new), serif;
+  }
+}
+
+/* Bloomberg Terminal - Asymmetric Layout Utilities */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 80px 1fr 340px;
+  grid-template-rows: 1fr;
+  height: 100vh;
+}
+
+.data-dense-font {
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 13px;
+  letter-spacing: -0.02em;
+}
+
+/* GSAP Page Transitions */
+.gsap-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.kanban-column {
+  @apply bg-card/40 border border-border/50 rounded-xl p-4 min-h-[500px];
+}
+
+.kanban-card {
+  @apply bg-card border border-border/80 rounded-lg p-4 mb-3 cursor-grab active:cursor-grabbing hover:border-primary/40 transition-all;
+}
+
+/* 3D Canvas Styles */
+.hero-canvas {
+  touch-action: none;
+  background: radial-gradient(circle at center, #111827 0%, #0A0F1C 100%);
+}

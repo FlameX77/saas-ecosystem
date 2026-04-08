@@ -1,0 +1,40 @@
+AXON BATCH 1 of 1 — 4 leads
+Generated: 2026-03-14 01:08
+==========================================================
+
+--- LEAD 1 ---
+URL: https://www.reddit.com/r/NextGenEmailMarketing/comments/1rsw0lh/cold_email_is_dying_because_most_people_design_it
+PLATFORM: Reddit (NextGenEmailMarketing)
+USERNAME: Patient_Tax4840
+PUBLISHED: 2026-03-13 18:48 UTC
+THEIR POST: Cold Email is Dying — Because Most People Design It Wrong
+EXCERPT: Cold email doesn’t fail because of deliverability. It fails because people design terrible emails. Most outreach today looks like this: • Big HTML templates • 5 links • “Schedule a demo” buttons • Fak
+--------------
+
+--- LEAD 2 ---
+URL: https://www.reddit.com/r/SaaS/comments/1rsw09k/i_got_tired_of_manual_lead_generation_so_i_built
+PLATFORM: Reddit (SaaS)
+USERNAME: Sea_Lengthiness_4627
+PUBLISHED: 2026-03-13 18:48 UTC
+THEIR POST: I got tired of manual lead generation so I built an AI SDR that does everything an SDR does
+EXCERPT: Manual outbound takes forever. Finding leads, sending emails, follow-ups, replying, booking calls. So I built an AI SDR system to automate it. What it currently does: • finds companies and decision ma
+--------------
+
+--- LEAD 3 ---
+URL: https://www.reddit.com/r/microsaas/comments/1rsuuf9/struggling_with_marketing
+PLATFORM: Reddit (microsaas)
+USERNAME: inglubridge
+PUBLISHED: 2026-03-13 18:06 UTC
+THEIR POST: Struggling with marketing
+EXCERPT: I love building stuff. SaaS, digital products, tools, whatever. Give me a problem and I'll build something to solve it. That part comes naturally to me. Marketing though? I'm completely lost. Two week
+--------------
+
+--- LEAD 4 ---
+URL: https://www.reddit.com/r/smallbusiness/comments/1rssc9w/tips_for_someone_new_to_outside_sales
+PLATFORM: Reddit (smallbusiness)
+USERNAME: Prestigious-Eye-4409
+PUBLISHED: 2026-03-13 16:38 UTC
+THEIR POST: Tips for someone new to outside sales
+EXCERPT: Hi everyone, I recently started working in outside sales in the stone/countertop industry and I’m realizing that this is a completely different world than what I’m used to. Most of the job relies on b
+--------------
+

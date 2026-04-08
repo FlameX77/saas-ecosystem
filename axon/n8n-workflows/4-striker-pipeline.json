@@ -1,0 +1,247 @@
+{
+  "name": "AXON — Striker (Pipeline Agent)",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## 🟠 STRIKER — Pipeline & Reply Management Agent\n\nMonitors inbox every 15 mins, classifies replies with Claude, responds intelligently, books meetings, flags cold deals\n\n**Runs:** Every 15 minutes automatically",
+        "height": 140, "width": 700, "color": 6
+      },
+      "id": "sticky-striker-header",
+      "name": "Striker Header",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-100, -280]
+    },
+    {
+      "parameters": {
+        "content": "## 📥 STEP 1 — CHECK INBOX\nPolls Gmail every 15 mins for new replies",
+        "height": 100, "width": 380, "color": 6
+      },
+      "id": "sticky-str1",
+      "name": "Str-Step1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-100, -120]
+    },
+    {
+      "parameters": {
+        "content": "## 🤖 STEP 2 — CLASSIFY INTENT\nClaude reads reply and classifies: INTERESTED / NOT_INTERESTED / MEETING_REQUEST / QUESTION / UNSUBSCRIBE",
+        "height": 100, "width": 450, "color": 6
+      },
+      "id": "sticky-str2",
+      "name": "Str-Step2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [580, -120]
+    },
+    {
+      "parameters": {
+        "content": "## 💬 STEP 3 — AUTO RESPOND\nClaude writes contextual reply. Books meeting if interested.",
+        "height": 100, "width": 380, "color": 6
+      },
+      "id": "sticky-str3",
+      "name": "Str-Step3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1200, -120]
+    },
+    {
+      "parameters": {
+        "rule": {"interval": [{"field": "minutes","minutesInterval": 15}]}
+      },
+      "id": "striker-schedule",
+      "name": "⏰ Every 15 Minutes",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [-40, 0]
+    },
+    {
+      "parameters": {
+        "workflowInputs": {"values": [{"name": "payload"},{"name": "userId"},{"name": "requestId"}]}
+      },
+      "id": "striker-trigger",
+      "name": "📥 Striker: Called by Master",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [-40, 120]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "filters": {
+          "labelIds": ["INBOX"],
+          "q": "is:unread -from:me"
+        },
+        "limit": 20,
+        "options": {}
+      },
+      "id": "check-gmail",
+      "name": "📬 Check Gmail Inbox",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [220, 60],
+      "credentials": {"gmailOAuth2": {"id": "gmail-cred","name": "Gmail OAuth"}}
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {"combinator": "and"},
+          "conditions": [{"leftValue": "={{ $input.all().length }}","operator": {"type": "number","operation": "gt"},"rightValue": 0}]
+        }
+      },
+      "id": "has-replies",
+      "name": "❓ Any New Replies?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [440, 60]
+    },
+    {
+      "parameters": {
+        "model": "claude-sonnet-4-20250514",
+        "options": {}
+      },
+      "id": "striker-claude",
+      "name": "🤖 Claude for Classification",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [760, 200],
+      "credentials": {"anthropicApi": {"id": "anthropic-cred","name": "Anthropic API"}}
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Classify this email reply intent. Email subject: {{ $json.payload?.headers?.find(h=>h.name==='Subject')?.value || 'Unknown' }}\n\nEmail body snippet: {{ $json.snippet || '' }}\n\nClassify as exactly one of: INTERESTED, NOT_INTERESTED, MEETING_REQUEST, QUESTION, UNSUBSCRIBE, OUT_OF_OFFICE\n\nRespond ONLY with JSON: {\"intent\": \"INTERESTED\", \"confidence\": 0.95, \"summary\": \"one sentence summary\"}",
+        "hasOutputParser": true
+      },
+      "id": "classify-intent",
+      "name": "🧠 Claude: Classify Intent",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [660, 60]
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\"intent\": \"INTERESTED\", \"confidence\": 0.9, \"summary\": \"Prospect wants to learn more\"}"
+      },
+      "id": "intent-parser",
+      "name": "📊 Parse Intent",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [760, 60]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {"conditions": {"options": {"combinator": "and"},"conditions": [{"leftValue": "={{ JSON.parse($json.output).intent }}","operator": {"type": "string","operation": "equals"},"rightValue": "INTERESTED"}]},"renameOutput": true,"outputKey": "interested"},
+            {"conditions": {"options": {"combinator": "and"},"conditions": [{"leftValue": "={{ JSON.parse($json.output).intent }}","operator": {"type": "string","operation": "equals"},"rightValue": "MEETING_REQUEST"}]},"renameOutput": true,"outputKey": "meeting"},
+            {"conditions": {"options": {"combinator": "and"},"conditions": [{"leftValue": "={{ JSON.parse($json.output).intent }}","operator": {"type": "string","operation": "equals"},"rightValue": "QUESTION"}]},"renameOutput": true,"outputKey": "question"},
+            {"conditions": {"options": {"combinator": "and"},"conditions": [{"leftValue": "={{ JSON.parse($json.output).intent }}","operator": {"type": "string","operation": "equals"},"rightValue": "UNSUBSCRIBE"}]},"renameOutput": true,"outputKey": "unsubscribe"}
+          ]
+        },
+        "options": {}
+      },
+      "id": "route-intent",
+      "name": "🔀 Route by Intent",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [980, 60]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Write a warm, professional reply to this interested prospect. Include your Calendly link: https://cal.com/axon-demo\n\nEmail snippet: {{ $json.snippet }}\n\nKeep it under 4 sentences. Be enthusiastic but not pushy. Confirm a 15-minute demo call.",
+        "hasOutputParser": false
+      },
+      "id": "write-interested-reply",
+      "name": "✍️ Write Interested Reply",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [1200, -60]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Write a reply to this prospect who directly requested a meeting. Include your Calendly link: https://cal.com/axon-demo\n\nEmail snippet: {{ $json.snippet }}\n\nBe direct, confirm their request, provide the booking link clearly.",
+        "hasOutputParser": false
+      },
+      "id": "write-meeting-reply",
+      "name": "✍️ Write Meeting Reply",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [1200, 60]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Answer this prospect's question about our AI automation platform. Keep it concise and helpful.\n\nQuestion context: {{ $json.snippet }}\n\nMention we'd love to show them a live demo. End with a soft CTA to book 15 mins.",
+        "hasOutputParser": false
+      },
+      "id": "write-question-reply",
+      "name": "✍️ Answer Question",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [1200, 180]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {"__rl": true,"mode": "list","value": "public"},
+        "table": {"__rl": true,"mode": "list","value": "contacts"},
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {"status": "unsubscribed","updated_at": "={{ new Date().toISOString() }}"}
+        },
+        "where": {"values": [{"column": "email","value": "={{ $json.from }}"}]},
+        "options": {}
+      },
+      "id": "mark-unsubscribed",
+      "name": "🚫 Mark Unsubscribed",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1200, 300],
+      "credentials": {"postgres": {"id": "supabase-cred","name": "Supabase DB"}}
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {"__rl": true,"mode": "list","value": "public"},
+        "table": {"__rl": true,"mode": "list","value": "contacts"},
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {"status": "replied","reply_category": "={{ JSON.parse($('🧠 Claude: Classify Intent').first().json.output).intent }}","updated_at": "={{ new Date().toISOString() }}"}
+        },
+        "where": {"values": [{"column": "email","value": "={{ $json.from }}"}]},
+        "options": {}
+      },
+      "id": "update-replied",
+      "name": "💾 Update Status: Replied",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1500, 100],
+      "credentials": {"postgres": {"id": "supabase-cred","name": "Supabase DB"}}
+    }
+  ],
+  "connections": {
+    "⏰ Every 15 Minutes": {"main": [[{"node": "📬 Check Gmail Inbox","type": "main","index": 0}]]},
+    "📥 Striker: Called by Master": {"main": [[{"node": "📬 Check Gmail Inbox","type": "main","index": 0}]]},
+    "📬 Check Gmail Inbox": {"main": [[{"node": "❓ Any New Replies?","type": "main","index": 0}]]},
+    "❓ Any New Replies?": {"main": [[{"node": "🧠 Claude: Classify Intent","type": "main","index": 0}],[]]},
+    "🧠 Claude: Classify Intent": {"main": [[{"node": "🔀 Route by Intent","type": "main","index": 0}]]},
+    "🤖 Claude for Classification": {"ai_languageModel": [[{"node": "🧠 Claude: Classify Intent","type": "ai_languageModel","index": 0}]]},
+    "📊 Parse Intent": {"ai_outputParser": [[{"node": "🧠 Claude: Classify Intent","type": "ai_outputParser","index": 0}]]},
+    "🔀 Route by Intent": {
+      "main": [
+        [{"node": "✍️ Write Interested Reply","type": "main","index": 0}],
+        [{"node": "✍️ Write Meeting Reply","type": "main","index": 0}],
+        [{"node": "✍️ Answer Question","type": "main","index": 0}],
+        [{"node": "🚫 Mark Unsubscribed","type": "main","index": 0}]
+      ]
+    },
+    "✍️ Write Interested Reply": {"main": [[{"node": "💾 Update Status: Replied","type": "main","index": 0}]]},
+    "✍️ Write Meeting Reply": {"main": [[{"node": "💾 Update Status: Replied","type": "main","index": 0}]]},
+    "✍️ Answer Question": {"main": [[{"node": "💾 Update Status: Replied","type": "main","index": 0}]]}
+  },
+  "settings": {"executionOrder": "v1"},
+  "tags": [{"name": "AXON"},{"name": "Striker"}]
+}

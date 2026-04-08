@@ -1,0 +1,240 @@
+{
+  "name": "AXON — Master Orchestrator",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "sticky-step0",
+      "name": "🧠 AXON OPERATING SYSTEM",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-200, -300],
+      "parameters": {
+        "content": "# 🧠 AXON — AI Business Operating System\n\n**Five agents. One system. Zero headcount.**\n\n- 🔵 Cortex → Research & Lead Discovery\n- 🟢 Specter → Outreach & Email Sequences\n- 🟠 Striker → Pipeline & Reply Management\n- 🟣 Pulse → Content Creation\n- ⚫ Sentinel → Monitoring & Alerts\n\n**Setup:** Add your credentials to each node with a ⚠️ warning badge.",
+        "height": 280,
+        "width": 500,
+        "color": 7
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 📥 STEP 1 — INTAKE & ROUTING\nWebhook receives request and routes to correct agent",
+        "height": 120,
+        "width": 580,
+        "color": 5
+      },
+      "id": "sticky-step1",
+      "name": "Step 1 Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [400, -200]
+    },
+    {
+      "parameters": {
+        "content": "## 🔵 STEP 2 — CORTEX (Research Agent)\nFinds leads, scans competitors, builds ICP profiles",
+        "height": 120,
+        "width": 580,
+        "color": 1
+      },
+      "id": "sticky-step2",
+      "name": "Step 2 Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1100, -200]
+    },
+    {
+      "parameters": {
+        "content": "## 🟢 STEP 3 — SPECTER (Outreach Agent)\nScores leads, writes personalized emails, runs sequences",
+        "height": 120,
+        "width": 580,
+        "color": 3
+      },
+      "id": "sticky-step3",
+      "name": "Step 3 Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1800, -200]
+    },
+    {
+      "parameters": {
+        "content": "## 🟠 STEP 4 — STRIKER (Pipeline Agent)\nManages inbox, flags cold deals, drafts follow-ups",
+        "height": 120,
+        "width": 580,
+        "color": 6
+      },
+      "id": "sticky-step4",
+      "name": "Step 4 Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [400, 500]
+    },
+    {
+      "parameters": {
+        "content": "## 🟣 STEP 5 — PULSE (Content Agent)\nWrites posts, schedules content across platforms",
+        "height": 120,
+        "width": 580,
+        "color": 4
+      },
+      "id": "sticky-step5",
+      "name": "Step 5 Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1100, 500]
+    },
+    {
+      "parameters": {
+        "content": "## ⚫ STEP 6 — SENTINEL (Monitoring Agent)\nWatches competitors, monitors APIs, sends instant alerts",
+        "height": 120,
+        "width": 580,
+        "color": 2
+      },
+      "id": "sticky-step6",
+      "name": "Step 6 Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1800, 500]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "axon-start",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "🚀 AXON Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [440, -60],
+      "webhookId": "axon-main-trigger"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body || $input.first().json;\nconst agent = (body.agent || 'cortex').toLowerCase();\nconst userId = body.userId || body.email || 'anonymous';\nconst payload = body.payload || body;\n\nif (!['cortex','specter','striker','pulse','sentinel'].includes(agent)) {\n  throw new Error(`Unknown agent: ${agent}. Use cortex, specter, striker, pulse, or sentinel`);\n}\n\nreturn [{\n  json: {\n    agent,\n    userId,\n    payload,\n    timestamp: new Date().toISOString(),\n    requestId: Math.random().toString(36).substr(2,9)\n  }\n}];"
+      },
+      "id": "validate-input",
+      "name": "✅ Validate & Route Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [660, -60]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {"conditions": {"options": {"caseSensitive": false},"combinator": "and","conditions": [{"leftValue": "={{ $json.agent }}","operator": {"type": "string","operation": "equals"},"rightValue": "cortex"}]},"renameOutput": true,"outputKey": "cortex"},
+            {"conditions": {"options": {"caseSensitive": false},"combinator": "and","conditions": [{"leftValue": "={{ $json.agent }}","operator": {"type": "string","operation": "equals"},"rightValue": "specter"}]},"renameOutput": true,"outputKey": "specter"},
+            {"conditions": {"options": {"caseSensitive": false},"combinator": "and","conditions": [{"leftValue": "={{ $json.agent }}","operator": {"type": "string","operation": "equals"},"rightValue": "striker"}]},"renameOutput": true,"outputKey": "striker"},
+            {"conditions": {"options": {"caseSensitive": false},"combinator": "and","conditions": [{"leftValue": "={{ $json.agent }}","operator": {"type": "string","operation": "equals"},"rightValue": "pulse"}]},"renameOutput": true,"outputKey": "pulse"},
+            {"conditions": {"options": {"caseSensitive": false},"combinator": "and","conditions": [{"leftValue": "={{ $json.agent }}","operator": {"type": "string","operation": "equals"},"rightValue": "sentinel"}]},"renameOutput": true,"outputKey": "sentinel"}
+          ]
+        },
+        "options": {}
+      },
+      "id": "router",
+      "name": "🔀 Agent Router",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [880, -60]
+    },
+    {
+      "parameters": {
+        "workflowId": "={{ $vars.CORTEX_WORKFLOW_ID }}",
+        "workflowInputs": {"mappingMode": "defineBelow","value": {"values": [{"name": "payload","value": "={{ $json.payload }}"},{"name": "userId","value": "={{ $json.userId }}"},{"name": "requestId","value": "={{ $json.requestId }}"}]}}
+      },
+      "id": "call-cortex",
+      "name": "🔵 Call Cortex Agent",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [1140, -160]
+    },
+    {
+      "parameters": {
+        "workflowId": "={{ $vars.SPECTER_WORKFLOW_ID }}",
+        "workflowInputs": {"mappingMode": "defineBelow","value": {"values": [{"name": "payload","value": "={{ $json.payload }}"},{"name": "userId","value": "={{ $json.userId }}"},{"name": "requestId","value": "={{ $json.requestId }}"}]}}
+      },
+      "id": "call-specter",
+      "name": "🟢 Call Specter Agent",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [1140, -60]
+    },
+    {
+      "parameters": {
+        "workflowId": "={{ $vars.STRIKER_WORKFLOW_ID }}",
+        "workflowInputs": {"mappingMode": "defineBelow","value": {"values": [{"name": "payload","value": "={{ $json.payload }}"},{"name": "userId","value": "={{ $json.userId }}"},{"name": "requestId","value": "={{ $json.requestId }}"}]}}
+      },
+      "id": "call-striker",
+      "name": "🟠 Call Striker Agent",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [1140, 40]
+    },
+    {
+      "parameters": {
+        "workflowId": "={{ $vars.PULSE_WORKFLOW_ID }}",
+        "workflowInputs": {"mappingMode": "defineBelow","value": {"values": [{"name": "payload","value": "={{ $json.payload }}"},{"name": "userId","value": "={{ $json.userId }}"},{"name": "requestId","value": "={{ $json.requestId }}"}]}}
+      },
+      "id": "call-pulse",
+      "name": "🟣 Call Pulse Agent",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [1140, 140]
+    },
+    {
+      "parameters": {
+        "workflowId": "={{ $vars.SENTINEL_WORKFLOW_ID }}",
+        "workflowInputs": {"mappingMode": "defineBelow","value": {"values": [{"name": "payload","value": "={{ $json.payload }}"},{"name": "userId","value": "={{ $json.userId }}"},{"name": "requestId","value": "={{ $json.requestId }}"}]}}
+      },
+      "id": "call-sentinel",
+      "name": "⚫ Call Sentinel Agent",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [1140, 240]
+    },
+    {
+      "parameters": {
+        "jsCode": "const result = $input.first().json;\nreturn [{\n  json: {\n    success: true,\n    agent: $('✅ Validate & Route Input').first().json.agent,\n    requestId: $('✅ Validate & Route Input').first().json.requestId,\n    result,\n    completedAt: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "format-response",
+      "name": "📦 Format Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1380, 40]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {"responseCode": 200}
+      },
+      "id": "respond",
+      "name": "📤 Send Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1600, 40]
+    }
+  ],
+  "connections": {
+    "🚀 AXON Webhook Trigger": {"main": [[{"node": "✅ Validate & Route Input","type": "main","index": 0}]]},
+    "✅ Validate & Route Input": {"main": [[{"node": "🔀 Agent Router","type": "main","index": 0}]]},
+    "🔀 Agent Router": {
+      "main": [
+        [{"node": "🔵 Call Cortex Agent","type": "main","index": 0}],
+        [{"node": "🟢 Call Specter Agent","type": "main","index": 0}],
+        [{"node": "🟠 Call Striker Agent","type": "main","index": 0}],
+        [{"node": "🟣 Call Pulse Agent","type": "main","index": 0}],
+        [{"node": "⚫ Call Sentinel Agent","type": "main","index": 0}]
+      ]
+    },
+    "🔵 Call Cortex Agent": {"main": [[{"node": "📦 Format Response","type": "main","index": 0}]]},
+    "🟢 Call Specter Agent": {"main": [[{"node": "📦 Format Response","type": "main","index": 0}]]},
+    "🟠 Call Striker Agent": {"main": [[{"node": "📦 Format Response","type": "main","index": 0}]]},
+    "🟣 Call Pulse Agent": {"main": [[{"node": "📦 Format Response","type": "main","index": 0}]]},
+    "⚫ Call Sentinel Agent": {"main": [[{"node": "📦 Format Response","type": "main","index": 0}]]},
+    "📦 Format Response": {"main": [[{"node": "📤 Send Response","type": "main","index": 0}]]}
+  },
+  "settings": {"executionOrder": "v1"},
+  "staticData": null,
+  "tags": [{"name": "AXON"}],
+  "pinData": {}
+}

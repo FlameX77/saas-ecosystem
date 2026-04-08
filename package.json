@@ -1,0 +1,21 @@
+{
+  "name": "saas-ecosystem",
+  "version": "0.1.0",
+  "packageManager": "pnpm@10.33.0",
+  "private": true,
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "test": "turbo test",
+    "clean": "find . -name \"node_modules\" -type d -prune -exec rm -rf '{}' +",
+    "setup": "pnpm install",
+    "launch": "bash scripts/launch_all.sh"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

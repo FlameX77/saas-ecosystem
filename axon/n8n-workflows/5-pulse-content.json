@@ -1,0 +1,192 @@
+{
+  "name": "AXON — Pulse (Content Agent)",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## 🟣 PULSE — Content Creation Agent\n\nScrapes trending content in your niche, writes LinkedIn posts, Twitter/X threads, and email newsletters in your voice. Runs every Monday morning.\n\n**Trigger:** Every Monday 7AM + called by Master",
+        "height": 140, "width": 700, "color": 4
+      },
+      "id": "sticky-pulse-header",
+      "name": "Pulse Header",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-100, -280]
+    },
+    {
+      "parameters": {
+        "content": "## 🔍 STEP 1 — TREND RESEARCH\nFinds what's working in AI/automation niche this week",
+        "height": 100, "width": 380, "color": 4
+      },
+      "id": "sticky-p1",
+      "name": "P-Step1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-100, -120]
+    },
+    {
+      "parameters": {
+        "content": "## ✍️ STEP 2 — CONTENT GENERATION\nClaude writes LinkedIn post + Twitter thread + Newsletter section",
+        "height": 100, "width": 380, "color": 4
+      },
+      "id": "sticky-p2",
+      "name": "P-Step2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [580, -120]
+    },
+    {
+      "parameters": {
+        "content": "## 💾 STEP 3 — SAVE DRAFTS\nSaves all content to Supabase content_drafts table for approval",
+        "height": 100, "width": 380, "color": 4
+      },
+      "id": "sticky-p3",
+      "name": "P-Step3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1200, -120]
+    },
+    {
+      "parameters": {
+        "rule": {"interval": [{"field": "cronExpression","expression": "0 7 * * 1"}]}
+      },
+      "id": "pulse-schedule",
+      "name": "⏰ Every Monday 7AM",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [-40, 0]
+    },
+    {
+      "parameters": {
+        "workflowInputs": {"values": [{"name": "payload"},{"name": "userId"},{"name": "requestId"}]}
+      },
+      "id": "pulse-trigger",
+      "name": "📥 Pulse: Called by Master",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [-40, 120]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://hn.algolia.com/api/v1/search?query=AI+automation+B2B&tags=story&numericFilters=created_at_i>{{ Math.floor((Date.now()-7*24*60*60*1000)/1000) }}&hitsPerPage=10",
+        "options": {}
+      },
+      "id": "fetch-hn-trends",
+      "name": "📰 Fetch HN Trending (AI/Automation)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 0]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://www.reddit.com/r/automation+r/SaaS+r/entrepreneur/top.json?limit=10&t=week",
+        "sendHeaders": true,
+        "headerParameters": {"parameters": [{"name": "User-Agent","value": "AXON-Pulse/1.0"}]},
+        "options": {}
+      },
+      "id": "fetch-reddit-trends",
+      "name": "📱 Fetch Reddit Trends",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 120]
+    },
+    {
+      "parameters": {
+        "jsCode": "const hn = $('📰 Fetch HN Trending (AI/Automation)').first().json.hits || [];\nconst reddit = $('📱 Fetch Reddit Trends').first().json.data?.children || [];\n\nconst hnTitles = hn.slice(0,5).map(h => h.title).join('\\n- ');\nconst redditTitles = reddit.slice(0,5).map(r => r.data?.title || '').join('\\n- ');\n\nreturn [{\n  json: {\n    trendingSummary: `Hacker News this week:\\n- ${hnTitles}\\n\\nReddit this week:\\n- ${redditTitles}`,\n    week: new Date().toISOString().split('T')[0]\n  }\n}];"
+      },
+      "id": "compile-trends",
+      "name": "📊 Compile Trend Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 60]
+    },
+    {
+      "parameters": {
+        "model": "claude-sonnet-4-20250514",
+        "options": {}
+      },
+      "id": "pulse-claude",
+      "name": "🤖 Claude for Content",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [800, 200],
+      "credentials": {"anthropicApi": {"id": "anthropic-cred","name": "Anthropic API"}}
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a B2B content writer for AXON, an AI business automation platform. Based on this week's trends, create content.\n\nTrending topics this week:\n{{ $json.trendingSummary }}\n\nCreate 3 pieces of content:\n1. A LinkedIn post (150-200 words, storytelling format, end with insight)\n2. A Twitter/X thread (5 tweets, each under 280 chars, numbered 1/ through 5/)\n3. A newsletter intro paragraph (100 words, conversational, references one trend)\n\nTone: Confident, insightful, founder-voice. Not corporate. Not salesy.\n\nRespond ONLY with JSON:\n{\"linkedinPost\": \"\", \"twitterThread\": \"\", \"newsletterIntro\": \"\", \"suggestedPostingTime\": \"Tuesday 9AM\"}",
+        "hasOutputParser": true
+      },
+      "id": "generate-content",
+      "name": "✍️ Claude: Generate Weekly Content",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [700, 60]
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\"linkedinPost\": \"...\", \"twitterThread\": \"...\", \"newsletterIntro\": \"...\", \"suggestedPostingTime\": \"Tuesday 9AM\"}"
+      },
+      "id": "content-parser",
+      "name": "📝 Parse Content",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [800, 60]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {"__rl": true,"mode": "list","value": "public"},
+        "table": {"__rl": true,"mode": "list","value": "content_drafts"},
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "week": "={{ $('📊 Compile Trend Report').first().json.week }}",
+            "linkedin_post": "={{ JSON.parse($json.output).linkedinPost }}",
+            "twitter_thread": "={{ JSON.parse($json.output).twitterThread }}",
+            "newsletter_intro": "={{ JSON.parse($json.output).newsletterIntro }}",
+            "suggested_time": "={{ JSON.parse($json.output).suggestedPostingTime }}",
+            "status": "draft",
+            "created_at": "={{ new Date().toISOString() }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "save-content",
+      "name": "💾 Save Content Drafts",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1060, 60],
+      "credentials": {"postgres": {"id": "supabase-cred","name": "Supabase DB"}}
+    },
+    {
+      "parameters": {
+        "sendTo": "your-email@domain.com",
+        "subject": "=AXON Pulse: Your weekly content is ready ({{ new Date().toDateString() }})",
+        "message": "=Your weekly content drafts are ready for review!\n\n📱 LinkedIn Post:\n{{ JSON.parse($('✍️ Claude: Generate Weekly Content').first().json.output).linkedinPost }}\n\n🐦 Twitter Thread:\n{{ JSON.parse($('✍️ Claude: Generate Weekly Content').first().json.output).twitterThread }}\n\n📧 Newsletter Intro:\n{{ JSON.parse($('✍️ Claude: Generate Weekly Content').first().json.output).newsletterIntro }}\n\nSuggested posting time: {{ JSON.parse($('✍️ Claude: Generate Weekly Content').first().json.output).suggestedPostingTime }}\n\nReview and approve in your AXON dashboard.",
+        "options": {}
+      },
+      "id": "email-content",
+      "name": "📧 Email Content for Approval",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [1280, 60],
+      "credentials": {"gmailOAuth2": {"id": "gmail-cred","name": "Gmail OAuth"}}
+    }
+  ],
+  "connections": {
+    "⏰ Every Monday 7AM": {"main": [[{"node": "📰 Fetch HN Trending (AI/Automation)","type": "main","index": 0}]]},
+    "📥 Pulse: Called by Master": {"main": [[{"node": "📰 Fetch HN Trending (AI/Automation)","type": "main","index": 0}]]},
+    "📰 Fetch HN Trending (AI/Automation)": {"main": [[{"node": "📊 Compile Trend Report","type": "main","index": 0}]]},
+    "📱 Fetch Reddit Trends": {"main": [[{"node": "📊 Compile Trend Report","type": "main","index": 0}]]},
+    "📊 Compile Trend Report": {"main": [[{"node": "✍️ Claude: Generate Weekly Content","type": "main","index": 0}]]},
+    "✍️ Claude: Generate Weekly Content": {"main": [[{"node": "💾 Save Content Drafts","type": "main","index": 0}]]},
+    "🤖 Claude for Content": {"ai_languageModel": [[{"node": "✍️ Claude: Generate Weekly Content","type": "ai_languageModel","index": 0}]]},
+    "📝 Parse Content": {"ai_outputParser": [[{"node": "✍️ Claude: Generate Weekly Content","type": "ai_outputParser","index": 0}]]},
+    "💾 Save Content Drafts": {"main": [[{"node": "📧 Email Content for Approval","type": "main","index": 0}]]}
+  },
+  "settings": {"executionOrder": "v1"},
+  "tags": [{"name": "AXON"},{"name": "Pulse"}]
+}

@@ -1,0 +1,349 @@
+{
+  "name": "AXON — Cortex (Research Agent)",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## 🔵 CORTEX — Research & Lead Discovery Agent\n\nFinds leads matching your ICP using Apollo, enriches with Hunter, scores with Claude AI\n\n**Trigger:** Called by Master Orchestrator OR runs on schedule every morning at 8AM",
+        "height": 140,
+        "width": 700,
+        "color": 1
+      },
+      "id": "sticky-cortex-header",
+      "name": "Cortex Header",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-100, -280]
+    },
+    {
+      "parameters": {
+        "content": "## 📥 STEP 1 — TRIGGER\nAccepts calls from Master or runs on schedule",
+        "height": 100, "width": 400, "color": 1
+      },
+      "id": "sticky-c1",
+      "name": "C-Step1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-100, -120]
+    },
+    {
+      "parameters": {
+        "content": "## 🔍 STEP 2 — APOLLO SEARCH\nSearches for companies matching ICP criteria",
+        "height": 100, "width": 400, "color": 1
+      },
+      "id": "sticky-c2",
+      "name": "C-Step2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [500, -120]
+    },
+    {
+      "parameters": {
+        "content": "## 👤 STEP 3 — CONTACT ENRICHMENT\nFinds decision makers + verifies emails with Hunter",
+        "height": 100, "width": 400, "color": 1
+      },
+      "id": "sticky-c3",
+      "name": "C-Step3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1100, -120]
+    },
+    {
+      "parameters": {
+        "content": "## 🤖 STEP 4 — AI SCORING\nClaude scores each lead 1-100 based on ICP fit",
+        "height": 100, "width": 400, "color": 1
+      },
+      "id": "sticky-c4",
+      "name": "C-Step4",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1700, -120]
+    },
+    {
+      "parameters": {
+        "content": "## 💾 STEP 5 — SAVE & NOTIFY\nStores qualified leads in Supabase, notifies via email",
+        "height": 100, "width": 400, "color": 1
+      },
+      "id": "sticky-c5",
+      "name": "C-Step5",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [2300, -120]
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {"name": "payload"},
+            {"name": "userId"},
+            {"name": "requestId"}
+          ]
+        }
+      },
+      "id": "cortex-trigger",
+      "name": "📥 Cortex: Called by Master",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [-40, 0]
+    },
+    {
+      "parameters": {
+        "rule": {"interval": [{"field": "cronExpression","expression": "0 8 * * *"}]}
+      },
+      "id": "schedule-trigger",
+      "name": "⏰ Daily 8AM Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [-40, 120]
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.first().json;\nconst payload = input.payload || input;\nreturn [{\n  json: {\n    userId: input.userId || 'system',\n    requestId: input.requestId || 'scheduled-' + Date.now(),\n    icpIndustries: payload.industries || ['SaaS','B2B Software','Marketing Agency','Consulting','Recruiting'],\n    icpJobTitles: payload.jobTitles || ['CEO','Founder','Co-Founder','VP Sales','Head of Growth','Managing Director'],\n    icpCountries: payload.countries || ['United States','United Kingdom','Australia','Canada','India'],\n    icpCompanySize: payload.companySize || '1,200',\n    minScore: payload.minScore || 60,\n    maxLeads: payload.maxLeads || 50\n  }\n}];"
+      },
+      "id": "prepare-search",
+      "name": "⚙️ Prepare Search Parameters",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [220, 60]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apollo.io/v1/mixed_people/search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {"parameters": [{"name": "Content-Type","value": "application/json"}]},
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {"name": "api_key","value": "={{ $credentials.apolloApiKey }}"},
+            {"name": "q_organization_industry_tag_ids","value": "={{ $json.icpIndustries }}"},
+            {"name": "person_titles","value": "={{ $json.icpJobTitles }}"},
+            {"name": "organization_locations","value": "={{ $json.icpCountries }}"},
+            {"name": "organization_num_employees_ranges","value": "={{ [$json.icpCompanySize] }}"},
+            {"name": "page","value": 1},
+            {"name": "per_page","value": "={{ $json.maxLeads }}"},
+            {"name": "contact_email_status","value": ["verified","likely to engage"]}
+          ]
+        },
+        "options": {}
+      },
+      "id": "apollo-search",
+      "name": "🔍 Apollo: Search Leads",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [500, 60],
+      "credentials": {"httpHeaderAuth": {"id": "apollo-cred","name": "Apollo API"}}
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "people",
+        "options": {}
+      },
+      "id": "split-results",
+      "name": "✂️ Split Into Individual Leads",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [720, 60]
+    },
+    {
+      "parameters": {
+        "jsCode": "const person = $input.first().json;\nconst email = person.email || '';\nconst domain = person.organization?.primary_domain || '';\nreturn [{\n  json: {\n    apolloId: person.id,\n    firstName: person.first_name || '',\n    lastName: person.last_name || '',\n    email: email,\n    title: person.title || '',\n    linkedinUrl: person.linkedin_url || '',\n    company: person.organization?.name || '',\n    domain: domain,\n    industry: person.organization?.industry || '',\n    employeeCount: person.organization?.num_employees || 0,\n    country: person.country || '',\n    city: person.city || '',\n    twitterUrl: person.twitter_url || '',\n    needsVerification: !email || email === ''\n  }\n}];"
+      },
+      "id": "extract-contact",
+      "name": "📋 Extract Contact Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [940, 60]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {"combinator": "and"},
+          "conditions": [{"leftValue": "={{ $json.needsVerification }}","operator": {"type": "boolean","operation": "true"}}]
+        }
+      },
+      "id": "check-needs-verify",
+      "name": "❓ Needs Email Verification?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1160, 60]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.hunter.io/v2/email-finder",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {"name": "domain","value": "={{ $json.domain }}"},
+            {"name": "first_name","value": "={{ $json.firstName }}"},
+            {"name": "last_name","value": "={{ $json.lastName }}"},
+            {"name": "api_key","value": "={{ $credentials.hunterApiKey }}"}
+          ]
+        },
+        "options": {}
+      },
+      "id": "hunter-find",
+      "name": "🎯 Hunter: Find Email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1380, 0],
+      "credentials": {"httpQueryAuth": {"id": "hunter-cred","name": "Hunter API"}}
+    },
+    {
+      "parameters": {
+        "jsCode": "const hunterData = $input.first().json.data || {};\nconst prev = $('📋 Extract Contact Data').first().json;\nreturn [{\n  json: {\n    ...prev,\n    email: hunterData.email || prev.email || '',\n    emailConfidence: hunterData.score || 0,\n    emailVerified: (hunterData.score || 0) >= 70\n  }\n}];"
+      },
+      "id": "merge-hunter",
+      "name": "🔗 Merge Hunter Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1600, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const contact = $input.first().json;\nif (!contact.email) return [];\nreturn [{ json: { ...contact, emailVerified: true } }];"
+      },
+      "id": "already-has-email",
+      "name": "✅ Already Has Email",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1380, 140]
+    },
+    {
+      "parameters": {
+        "model": "claude-sonnet-4-20250514",
+        "options": {}
+      },
+      "id": "claude-model",
+      "name": "🤖 Claude Sonnet",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [1900, 200],
+      "credentials": {"anthropicApi": {"id": "anthropic-cred","name": "Anthropic API"}}
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a B2B lead scoring expert. Score this lead from 1-100 based on their fit as a potential customer for an AI automation platform.\n\nLead details:\n- Name: {{ $json.firstName }} {{ $json.lastName }}\n- Title: {{ $json.title }}\n- Company: {{ $json.company }}\n- Industry: {{ $json.industry }}\n- Employees: {{ $json.employeeCount }}\n- Country: {{ $json.country }}\n\nScoring criteria:\n- Title relevance (CEO/Founder/VP = high): 0-30 points\n- Industry fit (SaaS/Agency/Consulting = high): 0-25 points\n- Company size (10-200 employees = sweet spot): 0-25 points\n- Country (US/UK/AU/CA = highest intent): 0-20 points\n\nRespond ONLY with valid JSON, no other text:\n{\"score\": <number 1-100>, \"priority\": \"<hot|warm|cold>\", \"reason\": \"<one sentence>\"}",
+        "hasOutputParser": true
+      },
+      "id": "claude-score",
+      "name": "🧠 Claude: Score Lead",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [1800, 60]
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\"score\": 85, \"priority\": \"hot\", \"reason\": \"Founder at B2B SaaS with 50 employees in US\"}"
+      },
+      "id": "output-parser",
+      "name": "📊 Parse Score JSON",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [1900, 60]
+    },
+    {
+      "parameters": {
+        "jsCode": "const scoreData = JSON.parse($input.first().json.output || '{}');\nconst contact = $('📋 Extract Contact Data').first().json;\nreturn [{\n  json: {\n    ...contact,\n    score: scoreData.score || 50,\n    priority: scoreData.priority || 'warm',\n    scoreReason: scoreData.reason || '',\n    status: 'queued',\n    createdAt: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "attach-score",
+      "name": "📎 Attach Score to Contact",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2060, 60]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {"combinator": "and"},
+          "conditions": [
+            {"leftValue": "={{ $json.score }}","operator": {"type": "number","operation": "gte"},"rightValue": 60},
+            {"leftValue": "={{ $json.email }}","operator": {"type": "string","operation": "isNotEmpty"}}
+          ]
+        }
+      },
+      "id": "filter-qualified",
+      "name": "🎯 Filter: Score ≥ 60?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [2280, 60]
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "schema": {"__rl": true,"mode": "list","value": "public"},
+        "table": {"__rl": true,"mode": "list","value": "contacts"},
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "apollo_id": "={{ $json.apolloId }}",
+            "first_name": "={{ $json.firstName }}",
+            "last_name": "={{ $json.lastName }}",
+            "email": "={{ $json.email }}",
+            "title": "={{ $json.title }}",
+            "company": "={{ $json.company }}",
+            "industry": "={{ $json.industry }}",
+            "country": "={{ $json.country }}",
+            "linkedin_url": "={{ $json.linkedinUrl }}",
+            "score": "={{ $json.score }}",
+            "priority": "={{ $json.priority }}",
+            "score_reason": "={{ $json.scoreReason }}",
+            "status": "queued",
+            "email_verified": "={{ $json.emailVerified }}"
+          }
+        },
+        "conflictColumns": ["apollo_id"],
+        "options": {}
+      },
+      "id": "save-to-supabase",
+      "name": "💾 Save to Supabase",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [2500, 0],
+      "credentials": {"postgres": {"id": "supabase-cred","name": "Supabase DB"}}
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nreturn [{\n  json: {\n    agent: 'cortex',\n    status: 'completed',\n    leadsFound: items.length,\n    message: `Cortex found and saved ${items.length} qualified leads`,\n    completedAt: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "cortex-summary",
+      "name": "📊 Cortex Summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2720, 0]
+    }
+  ],
+  "connections": {
+    "📥 Cortex: Called by Master": {"main": [[{"node": "⚙️ Prepare Search Parameters","type": "main","index": 0}]]},
+    "⏰ Daily 8AM Schedule": {"main": [[{"node": "⚙️ Prepare Search Parameters","type": "main","index": 0}]]},
+    "⚙️ Prepare Search Parameters": {"main": [[{"node": "🔍 Apollo: Search Leads","type": "main","index": 0}]]},
+    "🔍 Apollo: Search Leads": {"main": [[{"node": "✂️ Split Into Individual Leads","type": "main","index": 0}]]},
+    "✂️ Split Into Individual Leads": {"main": [[{"node": "📋 Extract Contact Data","type": "main","index": 0}]]},
+    "📋 Extract Contact Data": {"main": [[{"node": "❓ Needs Email Verification?","type": "main","index": 0}]]},
+    "❓ Needs Email Verification?": {
+      "main": [
+        [{"node": "🎯 Hunter: Find Email","type": "main","index": 0}],
+        [{"node": "✅ Already Has Email","type": "main","index": 0}]
+      ]
+    },
+    "🎯 Hunter: Find Email": {"main": [[{"node": "🔗 Merge Hunter Result","type": "main","index": 0}]]},
+    "🔗 Merge Hunter Result": {"main": [[{"node": "🧠 Claude: Score Lead","type": "main","index": 0}]]},
+    "✅ Already Has Email": {"main": [[{"node": "🧠 Claude: Score Lead","type": "main","index": 0}]]},
+    "🧠 Claude: Score Lead": {"main": [[{"node": "📎 Attach Score to Contact","type": "main","index": 0}]]},
+    "🤖 Claude Sonnet": {"ai_languageModel": [[{"node": "🧠 Claude: Score Lead","type": "ai_languageModel","index": 0}]]},
+    "📊 Parse Score JSON": {"ai_outputParser": [[{"node": "🧠 Claude: Score Lead","type": "ai_outputParser","index": 0}]]},
+    "📎 Attach Score to Contact": {"main": [[{"node": "🎯 Filter: Score ≥ 60?","type": "main","index": 0}]]},
+    "🎯 Filter: Score ≥ 60?": {
+      "main": [
+        [{"node": "💾 Save to Supabase","type": "main","index": 0}],
+        []
+      ]
+    },
+    "💾 Save to Supabase": {"main": [[{"node": "📊 Cortex Summary","type": "main","index": 0}]]}
+  },
+  "settings": {"executionOrder": "v1"},
+  "tags": [{"name": "AXON"},{"name": "Cortex"}]
+}

@@ -1,0 +1,108 @@
+{
+  "name": "Novu: Master Revenue Recovery & AI Outreach",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "stripe-payment-failed",
+        "options": {}
+      },
+      "id": "1",
+      "name": "Stripe Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "prompt": "={{$json.body.data.object.customer}} has a failed payment for {{$json.body.data.object.amount / 100}} USD. Draft a polite but firm medical office reminder SMS that emphasizes the importance of continuing their treatment. Tone: Professional & Empathetic.",
+        "options": {}
+      },
+      "id": "2",
+      "name": "AI Draft Assistant",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [450, 300],
+      "credentials": {
+        "openAiApi": {
+          "id": "openai-novu-key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "from": "NOVU_HEAL",
+        "to": "={{$json.body.data.object.customer_phone}}",
+        "message": "={{$node[\"AI Draft Assistant\"].json[\"choices\"][0][\"message\"][\"content\"]}}",
+        "options": {}
+      },
+      "id": "3",
+      "name": "Twilio SMS Escalation",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [650, 300],
+      "credentials": {
+        "twilioApi": {
+          "id": "twilio-novu-key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "table": "revenue_recovery_logs",
+        "data": {
+          "patient_id": "={{$json.body.data.object.customer}}",
+          "amount_failed": "={{$json.body.data.object.amount / 100}}",
+          "status": "SMS_SENT",
+          "last_contacted_at": "={{$now}}"
+        }
+      },
+      "id": "4",
+      "name": "Update Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [850, 300],
+      "credentials": {
+        "supabaseApi": {
+          "id": "supabase-novu-key"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Stripe Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Draft Assistant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Draft Assistant": {
+      "main": [
+        [
+          {
+            "node": "Twilio SMS Escalation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Twilio SMS Escalation": {
+      "main": [
+        [
+          {
+            "node": "Update Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

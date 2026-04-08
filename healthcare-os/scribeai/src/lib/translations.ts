@@ -1,0 +1,41 @@
+export const TRANSLATIONS = {
+  en: {
+    newConsultation: 'New Consultation',
+    patients: 'Patients',
+    notesHistory: 'Notes History',
+    settings: 'Settings',
+    patient: 'Patient',
+    save: 'Save',
+    generateNote: 'Generate Note',
+    record: 'Record',
+    chiefComplaint: 'Chief Complaint',
+    saveComplete: 'Save & Complete',
+    transcript: 'Transcript',
+    soapNote: 'SOAP Note',
+    addPatient: 'Add Patient',
+    searchPatient: 'Search patient by name...',
+    logout: 'Sign Out',
+    knowledgeBase: 'Knowledge Base',
+  },
+  ar: {
+    newConsultation: 'استشارة جديدة',
+    patients: 'المرضى',
+    notesHistory: 'سجل الملاحظات',
+    settings: 'الإعدادات',
+    patient: 'مريض',
+    save: 'حفظ',
+    generateNote: 'إنشاء ملاحظة',
+    record: 'تسجيل',
+    chiefComplaint: 'الشكوى الرئيسية',
+    saveComplete: 'حفظ وإتمام',
+    transcript: 'النص المكتوب',
+    soapNote: 'ملاحظة سوب',
+    addPatient: 'إضافة مريض',
+    searchPatient: 'البحث عن مريض بالاسم...',
+    logout: 'تسجيل الخروج',
+    knowledgeBase: 'قاعدة المعرفة',
+  },
+}
+
+export type UILanguage = 'en' | 'ar'
+export type TranslationKey = keyof typeof TRANSLATIONS.en

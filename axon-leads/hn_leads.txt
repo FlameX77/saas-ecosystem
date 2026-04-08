@@ -1,0 +1,503 @@
+AXON — HackerNews Leads (51 total)
+============================================================
+
+--- HN LEAD 1 ---
+USERNAME    : goatherders
+MESSAGE URL : https://news.ycombinator.com/user?id=goatherders
+POST URL    : https://news.ycombinator.com/item?id=18948972
+THEIR POST  : Can typically pull one or 2 recurring paying clients out of 100 cold emails. It's a slog. The math works but the convers
+
+PITCH:
+Hey goatherders — saw your comment about pulling 1-2 clients from every 100 cold emails. That math is brutal when you're the one sending them all manually. AXON is an AI outreach tool that personalises at scale and typically 3-5x that conversion rate. We're launching in 2 weeks with 20 founding member spots at 40% off forever. What's your current send volume?
+----------------------------------------
+
+--- HN LEAD 2 ---
+USERNAME    : iamqhsin
+MESSAGE URL : https://news.ycombinator.com/user?id=iamqhsin
+POST URL    : https://news.ycombinator.com/item?id=44363452
+THEIR POST  : After struggling with cold email for months I ended up building my own AI lead tool. Cold email was producing terrible r
+
+PITCH:
+Hey iamqhsin — the fact that you built your own lead tool after cold email failed tells me everything about how bad the pain was. AXON is tackling the same problem but at infrastructure scale — verified leads AI-written emails and smart follow-ups in one place. Launching in 2 weeks with 20 founding spots at 40% off. Would love your take as someone who's been deep in this problem — what was the biggest gap you couldn't solve?
+----------------------------------------
+
+--- HN LEAD 3 ---
+USERNAME    : tptacek
+MESSAGE URL : https://news.ycombinator.com/user?id=tptacek
+POST URL    : https://news.ycombinator.com/item?id=41712496
+THEIR POST  : What I've seen tried but haven't seen work: cold-calling direct email account management style sales. None of it convert
+
+PITCH:
+Hey tptacek — your comment about cold-calling and email both not working resonated. The issue usually isn't the channel — it's that most tools optimise for volume over relevance so everything feels like spam. AXON uses AI to write emails that reference something real about each prospect. Launching in 2 weeks with 20 founding spots at 40% off. What vertical were you trying to break into?
+----------------------------------------
+
+--- HN LEAD 4 ---
+USERNAME    : georgespencer
+MESSAGE URL : https://news.ycombinator.com/user?id=georgespencer
+POST URL    : https://news.ycombinator.com/item?id=22753136
+THEIR POST  : Cold outreach would be the longest of long tails: low conversion increasingly high maintenance. Not worth it.
+
+PITCH:
+Hey georgespencer — you nailed it: cold outreach is the longest of long tails. The problem is that most tools make you do all the work (list building copywriting follow-up management) and still deliver 1% conversion. AXON automates all of that and keeps quality high. Launching in 2 weeks with 20 founding spots at 40% off. Curious what you moved to instead of outreach?
+----------------------------------------
+
+--- HN LEAD 5 ---
+USERNAME    : arandr0x
+MESSAGE URL : https://news.ycombinator.com/user?id=arandr0x
+POST URL    : https://news.ycombinator.com/item?id=35023951
+THEIR POST  : Cold emails LinkedIn contacts phone calls work at like 1/100 the rate of contacts at conferences or warm intros. Terribl
+
+PITCH:
+Hey arandr0x — your point about cold email converting at 1/100 the rate of warm intros is exactly the problem AXON is built to close. The gap is personalisation — cold emails that feel warm because they reference real context about the prospect. Launching in 2 weeks with 20 founding spots at 40% off. Are you still doing any cold outreach or have you written it off entirely?
+----------------------------------------
+
+--- HN LEAD 6 ---
+USERNAME    : jameslk
+MESSAGE URL : https://news.ycombinator.com/user?id=jameslk
+POST URL    : https://news.ycombinator.com/item?id=46403619
+THEIR POST  : Cold sales / outbound sales is dying or mostly dead. Every new tool just automates spam.
+
+PITCH:
+Hey jameslk — you're right that outbound is dying in its current form. Spray-and-pray is dead. But targeted outreach to the right people with a message that actually references their situation still works — that's what AXON does. Launching in 2 weeks with 20 founding spots at 40% off. What does your current pipeline look like?
+----------------------------------------
+
+--- HN LEAD 7 ---
+USERNAME    : preston-kwei
+MESSAGE URL : https://news.ycombinator.com/user?id=preston-kwei
+POST URL    : https://news.ycombinator.com/item?id=46864047
+THEIR POST  : Tried all the typical strategies: cold email LinkedIn InMail careful targeting decent copy. It's mostly been a dead end.
+
+PITCH:
+Hey Jeetu456 — your reply about going through the same funnel and getting zero responses hit home. The funnel isn't broken — the personalisation is. AXON writes emails that actually reference what the prospect is dealing with which changes the reply dynamic entirely. Launching in 2 weeks with 20 founding spots at 40% off. What stage is your product at?
+----------------------------------------
+
+--- HN LEAD 8 ---
+USERNAME    : Jeetu456
+MESSAGE URL : https://news.ycombinator.com/user?id=Jeetu456
+POST URL    : https://news.ycombinator.com/item?id=46864047
+THEIR POST  : I went through the same funnel but no response. Cold outreach funnel completely dead.
+
+PITCH:
+Hey Jeetu456 — your reply about going through the same funnel and getting zero responses hit home. The funnel isn't broken — the personalisation is. AXON writes emails that actually reference what the prospect is dealing with which changes the reply dynamic entirely. Launching in 2 weeks with 20 founding spots at 40% off. What stage is your product at?
+----------------------------------------
+
+--- HN LEAD 9 ---
+USERNAME    : centilco
+MESSAGE URL : https://news.ycombinator.com/user?id=centilco
+POST URL    : https://news.ycombinator.com/item?id=43704846
+THEIR POST  : Built a polished SaaS API but very few convert and traffic is nowhere near what I hoped. Struggling with traction despit
+
+PITCH:
+Hey kastion — your comment about going back to 9-5 after the SaaS didn't pan out — that's a real one. Most solo SaaS attempts die on distribution not product. If you're ever building again AXON handles the customer acquisition side: verified leads personalised outreach automated follow-ups. Launching in 2 weeks with 20 founding spots at 40% off. What were you building?
+----------------------------------------
+
+--- HN LEAD 10 ---
+USERNAME    : mtlynch
+MESSAGE URL : https://news.ycombinator.com/user?id=mtlynch
+POST URL    : https://news.ycombinator.com/item?id=43704846
+THEIR POST  : Created an API as a service then spent months building it and realized I didn't have a distribution plan. No customers.
+
+PITCH:
+Hey kastion — your comment about going back to 9-5 after the SaaS didn't pan out — that's a real one. Most solo SaaS attempts die on distribution not product. If you're ever building again AXON handles the customer acquisition side: verified leads personalised outreach automated follow-ups. Launching in 2 weeks with 20 founding spots at 40% off. What were you building?
+----------------------------------------
+
+--- HN LEAD 11 ---
+USERNAME    : kastion
+MESSAGE URL : https://news.ycombinator.com/user?id=kastion
+POST URL    : https://news.ycombinator.com/item?id=43704846
+THEIR POST  : I didn't succeed with my SaaS and went back to a 9-to-5 job. Couldn't crack customer acquisition in a saturated market.
+
+PITCH:
+Hey kastion — your comment about going back to 9-5 after the SaaS didn't pan out — that's a real one. Most solo SaaS attempts die on distribution not product. If you're ever building again AXON handles the customer acquisition side: verified leads personalised outreach automated follow-ups. Launching in 2 weeks with 20 founding spots at 40% off. What were you building?
+----------------------------------------
+
+--- HN LEAD 12 ---
+USERNAME    : hkyeti
+MESSAGE URL : https://news.ycombinator.com/user?id=hkyeti
+POST URL    : https://news.ycombinator.com/item?id=8346603
+THEIR POST  : Struggling with getting the word out for our SaaS. Naively thought if we build a great product traffic would grow by its
+
+PITCH:
+Hey hkyeti — your post about struggling to get the word out and realising build-it-and-they-come doesn't work is something so many founders go through. Cold outreach done right is actually one of the most budget-efficient channels when you're early. AXON makes it work without a big team or spend. Launching in 2 weeks with 20 founding spots at 40% off. Is polljoy still active?
+----------------------------------------
+
+--- HN LEAD 13 ---
+USERNAME    : jetprop
+MESSAGE URL : https://news.ycombinator.com/user?id=jetprop
+POST URL    : https://news.ycombinator.com/item?id=44392494
+THEIR POST  : Asking how to find and sell to B2B customers. No clear path to getting in front of buyers.
+
+PITCH:
+Hey jetprop — your Ask HN about finding and selling to B2B customers is exactly the problem AXON solves. It finds verified leads in your ICP writes personalised emails and handles the follow-up cadence. You don't need a sales team to do B2B outbound properly anymore. Launching in 2 weeks with 20 founding spots at 40% off. What's the product you're selling?
+----------------------------------------
+
+--- HN LEAD 14 ---
+USERNAME    : DinakarS
+MESSAGE URL : https://news.ycombinator.com/user?id=DinakarS
+POST URL    : https://news.ycombinator.com/item?id=39842321
+THEIR POST  : Built an AI SaaS but have no audience to launch to and marketing budget of only $500. No idea how to gain traction.
+
+PITCH:
+Hey DinakarS — saw your Ask HN about succeeding with an AI SaaS with no audience and $500 budget. Cold outreach is actually the best channel when budget is tight because you can be surgical about who you target. AXON makes that feasible without a big list or ad spend. Launching in 2 weeks with 20 founding spots at 40% off. What's your SaaS in?
+----------------------------------------
+
+--- HN LEAD 15 ---
+USERNAME    : eof
+MESSAGE URL : https://news.ycombinator.com/user?id=eof
+POST URL    : https://news.ycombinator.com/item?id=4018752
+THEIR POST  : Found a client then built a product — now struggling to find more clients and scale beyond the first one.
+
+PITCH:
+Hey eof — your Ask HN about having found your first client then building the product and now needing more — that's the classic founder distribution gap. Going from 1 to 10 clients usually needs a repeatable outbound motion. AXON builds that for you. Launching in 2 weeks with 20 founding spots at 40% off. What space is the product in?
+----------------------------------------
+
+--- HN LEAD 16 ---
+USERNAME    : macoughl
+MESSAGE URL : https://news.ycombinator.com/user?id=macoughl
+POST URL    : https://news.ycombinator.com/item?id=11925715
+THEIR POST  : Owns a young SaaS app and explicitly asking for marketing mentorship because growth has stalled.
+
+PITCH:
+Hey macoughl — your Ask HN about trading tech mentorship for marketing help shows the pain is real: great product no growth engine. AXON is basically an outbound growth engine — finds qualified leads writes personalised pitches and follows up automatically. Launching in 2 weeks with 20 founding spots at 40% off. What's the SaaS?
+----------------------------------------
+
+--- HN LEAD 17 ---
+USERNAME    : taytus
+MESSAGE URL : https://news.ycombinator.com/user?id=taytus
+POST URL    : https://news.ycombinator.com/item?id=19966161
+THEIR POST  : Sending cold emails with no response. Tried first email then a follow-up 1-2 weeks later — still silence.
+
+PITCH:
+Hey taytus — saw your comment about sending cold emails with no response even after a follow-up 2 weeks later. Silence after a solid sequence is usually a targeting or personalisation problem not a channel problem. AXON diagnoses both. Launching in 2 weeks with 20 founding spots at 40% off. What were you selling?
+----------------------------------------
+
+--- HN LEAD 18 ---
+USERNAME    : soundlab
+MESSAGE URL : https://news.ycombinator.com/user?id=soundlab
+POST URL    : https://news.ycombinator.com/item?id=6663469
+THEIR POST  : Cold calling via phone is not an effective use of a smaller team's time. Looking for better outreach methods.
+
+PITCH:
+Hey soundlab — you're right that cold calling doesn't scale for small teams. Cold email does — when it's targeted and personalised properly. That's the gap AXON closes: AI-generated emails that reference real context about each prospect so reply rates are actually worth the effort. Launching in 2 weeks with 20 founding spots at 40% off. What does your current pipeline look like?
+----------------------------------------
+
+--- HN LEAD 19 ---
+USERNAME    : bernardohcr
+MESSAGE URL : https://news.ycombinator.com/user?id=bernardohcr
+POST URL    : https://news.ycombinator.com/item?id=44112528
+THEIR POST  : Manually rewriting each cold email to remove spam-trigger keywords. Deliverability is a constant battle.
+
+PITCH:
+Hey bernardohcr — manually stripping spam trigger keywords from every email is exactly the kind of thing that should be automated. AXON handles deliverability infrastructure and AI-writes emails that are naturally spam-filter-safe. Launching in 2 weeks with 20 founding spots at 40% off. How many emails a month are you sending?
+----------------------------------------
+
+--- HN LEAD 20 ---
+USERNAME    : solarisos
+MESSAGE URL : https://news.ycombinator.com/user?id=solarisos
+POST URL    : https://news.ycombinator.com/item?id=47076407
+THEIR POST  : AI has made hand-written style emails incredibly cheap to forge at scale. Worried that personalised cold email is becomi
+
+PITCH:
+Hey solarisos — your point about AI making hand-crafted email cheap to fake is sharp. The answer is verified data + signals-based personalisation not just GPT-written intros. That's AXON's approach. Launching in 2 weeks with 20 founding spots at 40% off. Are you on the sending side or the receiving side of this problem?
+----------------------------------------
+
+--- HN LEAD 21 ---
+USERNAME    : RogerL
+MESSAGE URL : https://news.ycombinator.com/user?id=RogerL
+POST URL    : https://news.ycombinator.com/item?id=44445801
+THEIR POST  : Asking why there's no demand for their SaaS despite efforts. Also noting inbox is filled with unsolicited sales pitches 
+
+PITCH:
+Hey RogerL — your Ask HN about why your SaaS has no demand despite the effort resonated. Getting outbound right when you're also drowning in bad outbound yourself is a real tension. AXON's approach is the opposite of inbox spam — it finds the exact right 50 people and sends something worth reading. Launching in 2 weeks with 20 founding spots at 40% off. What's the SaaS?
+----------------------------------------
+
+--- HN LEAD 22 ---
+USERNAME    : gnicholas
+MESSAGE URL : https://news.ycombinator.com/user?id=gnicholas
+POST URL    : https://news.ycombinator.com/item?id=40026691
+THEIR POST  : Hates cold email so much they prefer to miss opportunities rather than send it. Sees cold outreach as contributing to sp
+
+PITCH:
+Hey gnicholas — your comment about preferring to miss opportunities rather than contribute to cold email spam is genuinely fair. Most cold email IS spam. AXON is built for the opposite: tight lists personalised messages that reference real context. The kind of outreach you'd actually want to receive. Launching in 2 weeks with 20 founding spots at 40% off. What do you sell?
+----------------------------------------
+
+--- HN LEAD 23 ---
+USERNAME    : cosmodisk
+MESSAGE URL : https://news.ycombinator.com/user?id=cosmodisk
+POST URL    : https://news.ycombinator.com/item?id=27525819
+THEIR POST  : Don't try to automate everything or you'll be just another LinkedIn spammer sending standard off-the-mill sales cadence 
+
+PITCH:
+Hey dstick — love your take that sales = genuine connections. AXON agrees — it uses AI to research each prospect and write something genuinely relevant rather than blasting a cadence. The goal is to make cold outreach feel like a warm intro. Launching in 2 weeks with 20 founding spots at 40% off. What do you sell and how are you doing outreach now?
+----------------------------------------
+
+--- HN LEAD 24 ---
+USERNAME    : dstick
+MESSAGE URL : https://news.ycombinator.com/user?id=dstick
+POST URL    : https://news.ycombinator.com/item?id=27525819
+THEIR POST  : Don't automate your sales. Sales = people = genuine connections. Frustrated by automated outreach ruining sales.
+
+PITCH:
+Hey dstick — love your take that sales = genuine connections. AXON agrees — it uses AI to research each prospect and write something genuinely relevant rather than blasting a cadence. The goal is to make cold outreach feel like a warm intro. Launching in 2 weeks with 20 founding spots at 40% off. What do you sell and how are you doing outreach now?
+----------------------------------------
+
+--- HN LEAD 25 ---
+USERNAME    : arishec
+MESSAGE URL : https://news.ycombinator.com/user?id=arishec
+POST URL    : https://www.coldpitch.ai
+THEIR POST  : Built this because I was spending 15-20 min per cold email. Enter a company + role, pick a tone and goal, and it writes 
+
+PITCH:
+Hey arishec — saw your post about Show HN: Cold email was taking me 20 min each, so I built co. Cold email reply rates have cratered industry-wide — the problem is usually personalisation at scale. AXON is an AI outreach tool that researches each prospect and writes emails that actually reference their situation — typically 3-5x higher reply rates. Launching in 2 weeks with 20 founding spots at 40% off forever. What's your current send volume?
+----------------------------------------
+
+--- HN LEAD 26 ---
+USERNAME    : machomillions
+MESSAGE URL : https://news.ycombinator.com/user?id=machomillions
+POST URL    : https://www.trysuplex.com
+THEIR POST  : Article URL:  https://www.trysuplex.com    Comments URL:  https://news.ycombinator.com/item?id=47133802    Points: 1   #
+
+PITCH:
+Hey machomillions — saw your post about Show HN: Suplex – All-in-one cold email (leads, sending, CRM. Cold email reply rates have cratered industry-wide — the problem is usually personalisation at scale. AXON is an AI outreach tool that researches each prospect and writes emails that actually reference their situation — typically 3-5x higher reply rates. Launching in 2 weeks with 20 founding spots at 40% off forever. What's your current send volume?
+----------------------------------------
+
+--- HN LEAD 27 ---
+USERNAME    : AISDR
+MESSAGE URL : https://news.ycombinator.com/user?id=AISDR
+POST URL    : https://founder-sdr.surge.sh
+THEIR POST  : As a B2B SaaS founder myself, I know the grind of early-stage sales. You're building the product, handling support, and 
+
+PITCH:
+Hey AISDR — saw your post about Show HN: FounderSDR – AI cold email outreach for B2B SaaS fo. Cold email reply rates have cratered industry-wide — the problem is usually personalisation at scale. AXON is an AI outreach tool that researches each prospect and writes emails that actually reference their situation — typically 3-5x higher reply rates. Launching in 2 weeks with 20 founding spots at 40% off forever. What's your current send volume?
+----------------------------------------
+
+--- HN LEAD 28 ---
+USERNAME    : danesto
+MESSAGE URL : https://news.ycombinator.com/user?id=danesto
+POST URL    : https://news.ycombinator.com/item
+THEIR POST  : Have you ever had to send cold emails for a side project? As an engineer, I've always struggled to keep track of cold ma
+
+PITCH:
+Hey danesto — saw your post about Show HN: Free OSS cold email bulk sender and management. Cold email reply rates have cratered industry-wide — the problem is usually personalisation at scale. AXON is an AI outreach tool that researches each prospect and writes emails that actually reference their situation — typically 3-5x higher reply rates. Launching in 2 weeks with 20 founding spots at 40% off forever. What's your current send volume?
+----------------------------------------
+
+--- HN LEAD 29 ---
+USERNAME    : mohamedraheem
+MESSAGE URL : https://news.ycombinator.com/user?id=mohamedraheem
+POST URL    : https://leeflytic.com/digital-market/agentic-jobplier
+THEIR POST  : I made an AI tool that applies to jobs via cold email because LinkedIn Easy Apply was getting me nowhere. Most applicati
+
+PITCH:
+Hey mohamedraheem — saw your post about Show HN: I made an AI tool that applies to jobs via cold ema. Cold email reply rates have cratered industry-wide — the problem is usually personalisation at scale. AXON is an AI outreach tool that researches each prospect and writes emails that actually reference their situation — typically 3-5x higher reply rates. Launching in 2 weeks with 20 founding spots at 40% off forever. What's your current send volume?
+----------------------------------------
+
+--- HN LEAD 30 ---
+USERNAME    : jmoyson
+MESSAGE URL : https://news.ycombinator.com/user?id=jmoyson
+POST URL    : https://github.com/jmoyson/coldr
+THEIR POST  : I made Coldr after my last SaaS (Verifio) got zero traction. The target audience wasn't on Twitter or Product Hunt or th
+
+PITCH:
+Hey jmoyson — saw your post about Show HN: Coldr – Run small cold email campaigns from your te. Cold email reply rates have cratered industry-wide — the problem is usually personalisation at scale. AXON is an AI outreach tool that researches each prospect and writes emails that actually reference their situation — typically 3-5x higher reply rates. Launching in 2 weeks with 20 founding spots at 40% off forever. What's your current send volume?
+----------------------------------------
+
+--- HN LEAD 31 ---
+USERNAME    : mattmerrick
+MESSAGE URL : https://news.ycombinator.com/user?id=mattmerrick
+POST URL    : https://www.gdrip.co
+THEIR POST  : Article URL:  https://www.gdrip.co/    Comments URL:  https://news.ycombinator.com/item?id=44908230    Points: 2   # Com
+
+PITCH:
+Hey mattmerrick — saw your post about Cold email campaigns from your Gmail account. Cold email reply rates have cratered industry-wide — the problem is usually personalisation at scale. AXON is an AI outreach tool that researches each prospect and writes emails that actually reference their situation — typically 3-5x higher reply rates. Launching in 2 weeks with 20 founding spots at 40% off forever. What's your current send volume?
+----------------------------------------
+
+--- HN LEAD 32 ---
+USERNAME    : ZeeeTH
+MESSAGE URL : https://news.ycombinator.com/user?id=ZeeeTH
+POST URL    : https://coldcopy.xyz
+THEIR POST  : I built ColdCopy (coldcopy.xyz) a few days ago to solve my own cold email writing struggles. Initially it just generated
+
+PITCH:
+Hey ZeeeTH — saw your post about Show HN: I added A/B testing to my cold email generator – do. Cold email reply rates have cratered industry-wide — the problem is usually personalisation at scale. AXON is an AI outreach tool that researches each prospect and writes emails that actually reference their situation — typically 3-5x higher reply rates. Launching in 2 weeks with 20 founding spots at 40% off forever. What's your current send volume?
+----------------------------------------
+
+--- HN LEAD 33 ---
+USERNAME    : iamqhsin
+MESSAGE URL : https://news.ycombinator.com/user?id=iamqhsin
+POST URL    : https://www.quickgen.ai
+THEIR POST  : Article URL:  https://www.quickgen.ai/    Comments URL:  https://news.ycombinator.com/item?id=44363435    Points: 1   # 
+
+PITCH:
+Hey iamqhsin — saw your post about Show HN: After struggling with cold email, I made this AI le. Cold email reply rates have cratered industry-wide — the problem is usually personalisation at scale. AXON is an AI outreach tool that researches each prospect and writes emails that actually reference their situation — typically 3-5x higher reply rates. Launching in 2 weeks with 20 founding spots at 40% off forever. What's your current send volume?
+----------------------------------------
+
+--- HN LEAD 34 ---
+USERNAME    : bernardohcr
+MESSAGE URL : https://news.ycombinator.com/user?id=bernardohcr
+POST URL    : https://maildock.io
+THEIR POST  : Article URL:  https://maildock.io/    Comments URL:  https://news.ycombinator.com/item?id=44112152    Points: 4   # Comm
+
+PITCH:
+Hey bernardohcr — saw your post about MailDock: Cold Email Infrastructure. Cold email reply rates have cratered industry-wide — the problem is usually personalisation at scale. AXON is an AI outreach tool that researches each prospect and writes emails that actually reference their situation — typically 3-5x higher reply rates. Launching in 2 weeks with 20 founding spots at 40% off forever. What's your current send volume?
+----------------------------------------
+
+--- HN LEAD 35 ---
+USERNAME    : Bluestein
+MESSAGE URL : https://news.ycombinator.com/user?id=Bluestein
+POST URL    : https://coldemails.world
+THEIR POST  : Article URL:  https://coldemails.world/    Comments URL:  https://news.ycombinator.com/item?id=43401528    Points: 3   #
+
+PITCH:
+Hey Bluestein — saw your post about The Cold Email Hall of Fame. Cold email reply rates have cratered industry-wide — the problem is usually personalisation at scale. AXON is an AI outreach tool that researches each prospect and writes emails that actually reference their situation — typically 3-5x higher reply rates. Launching in 2 weeks with 20 founding spots at 40% off forever. What's your current send volume?
+----------------------------------------
+
+--- HN LEAD 36 ---
+USERNAME    : zh2408
+MESSAGE URL : https://news.ycombinator.com/user?id=zh2408
+POST URL    : https://github.com/cold-outreach/Tutorial-Cold-Email-Personalization
+THEIR POST  : Article URL:  https://github.com/cold-outreach/Tutorial-Cold-Email-Personalization    Comments URL:  https://news.ycombi
+
+PITCH:
+Hey zh2408 — saw your post about Show HN: I built an agent to write personalized cold email o. Cold email reply rates have cratered industry-wide — the problem is usually personalisation at scale. AXON is an AI outreach tool that researches each prospect and writes emails that actually reference their situation — typically 3-5x higher reply rates. Launching in 2 weeks with 20 founding spots at 40% off forever. What's your current send volume?
+----------------------------------------
+
+--- HN LEAD 37 ---
+USERNAME    : thunderbong
+MESSAGE URL : https://news.ycombinator.com/user?id=thunderbong
+POST URL    : https://www.youtube.com/watch
+THEIR POST  : Article URL:  https://www.youtube.com/watch?v=YE3WqEbCPks    Comments URL:  https://news.ycombinator.com/item?id=4280085
+
+PITCH:
+Hey thunderbong — saw your post about How Cold Email Pioneer Jeremy Chatelaine Built a Business Em. Cold email reply rates have cratered industry-wide — the problem is usually personalisation at scale. AXON is an AI outreach tool that researches each prospect and writes emails that actually reference their situation — typically 3-5x higher reply rates. Launching in 2 weeks with 20 founding spots at 40% off forever. What's your current send volume?
+----------------------------------------
+
+--- HN LEAD 38 ---
+USERNAME    : ABS
+MESSAGE URL : https://news.ycombinator.com/user?id=ABS
+POST URL    : https://bsky.app/profile/stephango.com/post/3ldjptsylf224
+THEIR POST  : Article URL:  https://bsky.app/profile/stephango.com/post/3ldjptsylf224    Comments URL:  https://news.ycombinator.com/i
+
+PITCH:
+Hey ABS — saw your post about Bending Spoons acquisition cold email to Obsidian. Cold email reply rates have cratered industry-wide — the problem is usually personalisation at scale. AXON is an AI outreach tool that researches each prospect and writes emails that actually reference their situation — typically 3-5x higher reply rates. Launching in 2 weeks with 20 founding spots at 40% off forever. What's your current send volume?
+----------------------------------------
+
+--- HN LEAD 39 ---
+USERNAME    : handfuloflight
+MESSAGE URL : https://news.ycombinator.com/user?id=handfuloflight
+POST URL    : https://www.za-zu.com/blog/cold-email-and-spam
+THEIR POST  : Article URL:  https://www.za-zu.com/blog/cold-email-and-spam    Comments URL:  https://news.ycombinator.com/item?id=4242
+
+PITCH:
+Hey handfuloflight — saw your post about Cold Email and Spam. Cold email reply rates have cratered industry-wide — the problem is usually personalisation at scale. AXON is an AI outreach tool that researches each prospect and writes emails that actually reference their situation — typically 3-5x higher reply rates. Launching in 2 weeks with 20 founding spots at 40% off forever. What's your current send volume?
+----------------------------------------
+
+--- HN LEAD 40 ---
+USERNAME    : esher
+MESSAGE URL : https://news.ycombinator.com/user?id=esher
+POST URL    : https://blog.fortrabbit.com/cold-outreach
+THEIR POST  : Article URL:  https://blog.fortrabbit.com/cold-outreach/    Comments URL:  https://news.ycombinator.com/item?id=47325267
+
+PITCH:
+Hey esher — saw your post about Cold Outreach. This is a problem AXON is built to solve: AI outreach that finds the right leads and sends personalised messages that actually get replies. Launching in 2 weeks with 40% off for 20 founding members. What does your current customer acquisition look like?
+----------------------------------------
+
+--- HN LEAD 41 ---
+USERNAME    : puppion
+MESSAGE URL : https://news.ycombinator.com/user?id=puppion
+POST URL    : https://socket.dev/blog/ai-agent-lands-prs-in-major-oss-projects-targets-maintainers-via-cold-outreach
+THEIR POST  : Article URL:  https://socket.dev/blog/ai-agent-lands-prs-in-major-oss-projects-targets-maintainers-via-cold-outreach    
+
+PITCH:
+Hey puppion — saw your post about AI Agent Lands PRs in Major OSS Projects, Targets Maintainer. This is a problem AXON is built to solve: AI outreach that finds the right leads and sends personalised messages that actually get replies. Launching in 2 weeks with 40% off for 20 founding members. What does your current customer acquisition look like?
+----------------------------------------
+
+--- HN LEAD 42 ---
+USERNAME    : jsathianathen
+MESSAGE URL : https://news.ycombinator.com/user?id=jsathianathen
+POST URL    : https://www.dmpro.ai
+THEIR POST  : I built a tool to automate cold outreach on X(Twitter) DMpro sends 450 cold DMs/daily per account. You can connect multi
+
+PITCH:
+Hey jsathianathen — saw your post about Show HN: I Built a Cold Outreach Machine. This is a problem AXON is built to solve: AI outreach that finds the right leads and sends personalised messages that actually get replies. Launching in 2 weeks with 40% off for 20 founding members. What does your current customer acquisition look like?
+----------------------------------------
+
+--- HN LEAD 43 ---
+USERNAME    : hijakr
+MESSAGE URL : https://news.ycombinator.com/user?id=hijakr
+POST URL    : https://www.vexping.com
+THEIR POST  : Article URL:  https://www.vexping.com/    Comments URL:  https://news.ycombinator.com/item?id=44824677    Points: 2   # 
+
+PITCH:
+Hey hijakr — saw your post about Cold outreach sucked so bad I built this to fix it. This is a problem AXON is built to solve: AI outreach that finds the right leads and sends personalised messages that actually get replies. Launching in 2 weeks with 40% off for 20 founding members. What does your current customer acquisition look like?
+----------------------------------------
+
+--- HN LEAD 44 ---
+USERNAME    : jamsey
+MESSAGE URL : https://news.ycombinator.com/user?id=jamsey
+POST URL    : https://www.cold-craft.ai
+THEIR POST  : hey HN, What do you think of this? Do you think this is a viable app? I built this in about a week, wondering if I shoul
+
+PITCH:
+Hey jamsey — saw your post about Show HN: Cold Craft – your AI cold outreach assistant?. This is a problem AXON is built to solve: AI outreach that finds the right leads and sends personalised messages that actually get replies. Launching in 2 weeks with 40% off for 20 founding members. What does your current customer acquisition look like?
+----------------------------------------
+
+--- HN LEAD 45 ---
+USERNAME    : ignalex
+MESSAGE URL : https://news.ycombinator.com/user?id=ignalex
+POST URL    : https://leadloom.xyz
+THEIR POST  : Hi everyone. Over the weekend, I built a tool for finding contacts using AI. Here's the backstory. My partner and I are 
+
+PITCH:
+Hey ignalex — saw your post about Show HN: AI Cold Outreach Tool. This is a problem AXON is built to solve: AI outreach that finds the right leads and sends personalised messages that actually get replies. Launching in 2 weeks with 40% off for 20 founding members. What does your current customer acquisition look like?
+----------------------------------------
+
+--- HN LEAD 46 ---
+USERNAME    : iam_ashpak
+MESSAGE URL : https://news.ycombinator.com/user?id=iam_ashpak
+POST URL    : https://www.salesnode.tech
+THEIR POST  : LinkedIn to Sales Pipeline. AI Cold Outreach for Tech Founders. Focus on building your product while AI masters your sal
+
+PITCH:
+Hey iam_ashpak — saw your post about Show HN: I'm building SalesNode to automate cold outreach fo. This is a problem AXON is built to solve: AI outreach that finds the right leads and sends personalised messages that actually get replies. Launching in 2 weeks with 40% off for 20 founding members. What does your current customer acquisition look like?
+----------------------------------------
+
+--- HN LEAD 47 ---
+USERNAME    : juliengss
+MESSAGE URL : https://news.ycombinator.com/user?id=juliengss
+POST URL    : https://www.getcustomerfast.com
+THEIR POST  : As a solopreneur who's launched 5+ products, I know that the hardest part of starting a business is getting your first c
+
+PITCH:
+Hey juliengss — saw your post about Show HN: GetCustomerFast – Get Your First Customers via Cold. Cold email reply rates have cratered industry-wide — the problem is usually personalisation at scale. AXON is an AI outreach tool that researches each prospect and writes emails that actually reference their situation — typically 3-5x higher reply rates. Launching in 2 weeks with 20 founding spots at 40% off forever. What's your current send volume?
+----------------------------------------
+
+--- HN LEAD 48 ---
+USERNAME    : Garvit0501
+MESSAGE URL : https://news.ycombinator.com/user?id=Garvit0501
+POST URL    : https://connect.coryfi.com
+THEIR POST  : We're a professional network that solves the problems of cold outreach through our Paths feature     Comments URL:  http
+
+PITCH:
+Hey Garvit0501 — saw your post about Show HN: Coryfi Connect – We help overcome the problems of c. This is a problem AXON is built to solve: AI outreach that finds the right leads and sends personalised messages that actually get replies. Launching in 2 weeks with 40% off for 20 founding members. What does your current customer acquisition look like?
+----------------------------------------
+
+--- HN LEAD 49 ---
+USERNAME    : mgdo
+MESSAGE URL : https://news.ycombinator.com/user?id=mgdo
+POST URL    : http://blog.amplemarket.com/lead-generation-prospecting
+THEIR POST  : Article URL:  http://blog.amplemarket.com/lead-generation-prospecting/    Comments URL:  https://news.ycombinator.com/it
+
+PITCH:
+Hey mgdo — noticed your post about Outbound Sales for Beginners: Lead Generation. Lead gen being this hard usually means the top-of-funnel is broken — wrong list, generic message, or both. AXON fixes both: it finds verified leads in your ICP and writes personalised outreach for each one. Launching in 2 weeks, 40% off for 20 founding members. What does your ICP look like?
+----------------------------------------
+
+--- HN LEAD 50 ---
+USERNAME    : lloyedlobo
+MESSAGE URL : https://news.ycombinator.com/user?id=lloyedlobo
+POST URL    : http://blog.speakeasy.co/blog/5tips-crushquota-outbound
+THEIR POST  : Article URL:  http://blog.speakeasy.co/blog/5tips-crushquota-outbound    Comments URL:  https://news.ycombinator.com/ite
+
+PITCH:
+Hey lloyedlobo — saw your post about 5 Outbound Sales Prospecting Tips to Exceed Your Sales Quota. This is a problem AXON is built to solve: AI outreach that finds the right leads and sends personalised messages that actually get replies. Launching in 2 weeks with 40% off for 20 founding members. What does your current customer acquisition look like?
+----------------------------------------
+

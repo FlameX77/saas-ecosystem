@@ -1,0 +1,139 @@
+{
+  "name": "Cliniq OS: Master Patient Concierge & Booking Engine",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "cliniq-inquiry",
+        "options": {}
+      },
+      "id": "1",
+      "name": "WhatsApp Inquiry Hook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "prompt": "Evaluate the patient query: '{{$json.body.Message}}'. Intent: 'BOOKING', 'QUESTION', or 'URGENT'. User: {{$json.body.From}}",
+        "options": {}
+      },
+      "id": "2",
+      "name": "AI Intent Discovery",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [400, 300],
+      "credentials": {
+        "openAiApi": {
+          "id": "openai-cliniq-key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": "primary",
+        "timeMin": "={{$now}}",
+        "timeMax": "={{$now.plus({ days: 3 })}}",
+        "options": {
+          "status": "confirmed"
+        }
+      },
+      "id": "3",
+      "name": "Check Calendar Availability",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1,
+      "position": [600, 300],
+      "credentials": {
+        "googleCalendarApi": {
+          "id": "google-cliniq-key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": "primary",
+        "summary": "Meeting with Patient {{$node[\"Incoming Traffic Hook\"].json[\"body\"][\"From\"]}}",
+        "start": "={{$json.start}}",
+        "end": "={{$json.end}}",
+        "additionalFields": {
+          "description": "Auto-booked via Cliniq OS Concierge"
+        }
+      },
+      "id": "4",
+      "name": "Create Appointment",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1,
+      "position": [800, 300],
+      "credentials": {
+        "googleCalendarApi": {
+          "id": "google-cliniq-key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "from": "CLINIQ_AI",
+        "to": "={{$node[\"WhatsApp Inquiry Hook\"].json[\"body\"][\"From\"]}}",
+        "message": "Confirmed! Your appointment is scheduled for {{$json.start}}. Please fill this HIPAA pre-visit form: https://forms.cliniq.ai/{{$json.id}}",
+        "options": {}
+      },
+      "id": "5",
+      "name": "Send Confirmation",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [1000, 300],
+      "credentials": {
+        "twilioApi": {
+          "id": "twilio-cliniq-key"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "WhatsApp Inquiry Hook": {
+      "main": [
+        [
+          {
+            "node": "AI Intent Discovery",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Intent Discovery": {
+      "main": [
+        [
+          {
+            "node": "Check Calendar Availability",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Calendar Availability": {
+      "main": [
+        [
+          {
+            "node": "Create Appointment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Appointment": {
+      "main": [
+        [
+          {
+            "node": "Send Confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

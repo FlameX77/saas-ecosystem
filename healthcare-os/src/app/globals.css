@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* WARM CLINICAL PRECISION - ScribeAI Design System */
+    --background: 60 20% 98%; /* #FAFAF7 Ivory Base */
+    --foreground: 220 15% 15%; /* Deep Charcoal */
+    --card: 60 20% 97%;
+    --card-foreground: 220 15% 15%;
+    --popover: 60 20% 98%;
+    --popover-foreground: 220 15% 15%;
+    --primary: 156 42% 18%; /* #1B4332 Forest Green Authority */
+    --primary-foreground: 60 20% 98%;
+    --secondary: 42 55% 58%; /* #D4A853 Warm Gold Accent */
+    --secondary-foreground: 220 15% 15%;
+    --muted: 60 10% 92%;
+    --muted-foreground: 220 10% 45%;
+    --accent: 42 55% 58%;
+    --accent-foreground: 220 15% 15%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 60 20% 98%;
+    --border: 60 10% 90%;
+    --input: 60 10% 90%;
+    --ring: 156 42% 18%;
+    --radius: 0.75rem;
+
+    /* ScribeAI Clinical Tokens */
+    --ivory: #FAFAF7;
+    --forest-green: #1B4332;
+    --warm-gold: #D4A853;
+    --smoke: #F5F5F0;
+    --sage: #4A7C59;
+  }
+
+  /* DARK MODE NOT APPLICABLE FOR CLINICAL ENVIRONMENTS - STAYING WARM LIGHT BY DEFAULT */
+}
+
+@theme {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(60 10% 90%);
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-ivory: var(--ivory);
+  --color-forest-green: var(--forest-green);
+  --color-warm-gold: var(--warm-gold);
+  --color-smoke: var(--smoke);
+  --color-sage: var(--sage);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: 'DM Mono', monospace; /* Default Body - Precise */
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cormorant Garamond', serif; /* Medical Journal Authority */
+    @apply font-medium italic tracking-tight text-primary;
+  }
+}
+
+/* GSAP Page Turn Animation Class */
+.page-turn {
+  transform-origin: left center;
+}
+
+/* 3D Canvas Styles */
+.r3f-canvas {
+  touch-action: none;
+  background: radial-gradient(circle at center, #FAFAF7, #F5F5F0);
+}
+
+/* Bilingual RTL Support */
+[dir="rtl"] {
+  font-family: 'IBM Plex Arabic', sans-serif;
+}
